@@ -14,7 +14,7 @@ import orderRouter from './routes/order.route.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 const DB_URI = process.env.MONGO_URI;
 
 const app = express();
