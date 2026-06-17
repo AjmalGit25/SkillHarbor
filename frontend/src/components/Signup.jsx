@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
+import { BACKEND_URL } from "../utils/utils.js";
+
 export default function Signup() {
 
   const [firstName, setFirstName] = useState("");
@@ -19,7 +21,7 @@ export default function Signup() {
     console.log(firstName, lastName, email, password);
 
     try {
-      const response = await axios.post("http://localhost:4001/api/v1/user/signup",
+      const response = await axios.post(`${BACKEND_URL}/user/signup`,
         { firstName, lastName, email, password },
         { withCredentials: true, headers: { "Content-Type": "application/json" } });
       console.log("Signup successful", response.data);
