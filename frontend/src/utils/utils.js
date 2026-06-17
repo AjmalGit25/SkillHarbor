@@ -1,1 +1,1 @@
-export const BACKEND_URL = "https://skillharbor.onrender.com";
+export const BACKEND_URL = "https://skillharbor.onrender.com/api/v1";
