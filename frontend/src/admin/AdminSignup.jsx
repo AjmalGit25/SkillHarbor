@@ -24,6 +24,7 @@ export default function AdminSignup() {
         { withCredentials: true, headers: { "Content-Type": "application/json" } });
       console.log("Admin Signup successful", response.data);
       toast.success(response.data.message);
+      
       navigate("/admin/login");
     } catch (error) {
       if (error.response) {

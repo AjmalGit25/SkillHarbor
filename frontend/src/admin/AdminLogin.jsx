@@ -26,6 +26,7 @@ export default function AdminLogin() {
       console.log("Admin Login successful", response.data);
       toast.success(response.data.message);
       localStorage.setItem("admin", JSON.stringify(response.data));
+      
       navigate("/admin/dashboard");
     } catch (error) {
       if (error.response) {
