@@ -26,7 +26,9 @@ export default function Signup() {
         { withCredentials: true, headers: { "Content-Type": "application/json" } });
       console.log("Signup successful", response.data);
       toast.success(response.data.message);
+
       navigate("/login");
+
     } catch (error) {
       if (error.response) {
         setErrorMessage(error.response.data.message || "Signup failed!!");
