@@ -37,14 +37,13 @@ export const signup = async (req, res) => {
 
     const hashPassword = await bcrypt.hash(password, 10);
 
-    const userData = new User({
+    const user = await User.create({
       firstName,
       lastName,
       email,
       password: hashPassword,
     });
-
-    const user = await User.create(userData);
+    
     console.log("User created successfully", user);
 
     return res.status(200).json({
@@ -93,8 +92,8 @@ export const login = async (req, res) => {
     const cookieOptions = {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),    // 1 day
       httpOnly: true,                                         // Can't be accessed by client side scripts (JavaScript)
-      secure: process.env.NODE_ENV === "production",          // true for production (http), false for development (https only)
-      sameSite: "Strict",                                     // CSRF protection
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Strict",
     };
     res.cookie("jwt", token, cookieOptions);
 
