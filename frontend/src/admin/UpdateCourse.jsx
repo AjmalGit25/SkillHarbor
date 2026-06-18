@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { BACKEND_URL } from "../utils/utils";
+
 export default function UpdateCourse() {
   const { id } = useParams();
 
@@ -18,7 +20,7 @@ export default function UpdateCourse() {
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:4001/api/v1/course/${id}`, {
+        const { data } = await axios.get(`${BACKEND_URL}/course/${id}`, {
           withCredentials: true,
         });
         setTitle(data.course.title);

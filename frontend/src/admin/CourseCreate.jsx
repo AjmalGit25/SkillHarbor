@@ -3,6 +3,8 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
+import { BACKEND_URL } from "../utils/utils";
+
 export default function CourseCreate() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -40,7 +42,7 @@ export default function CourseCreate() {
 
     try {
       const response = await axios.post(
-        `http://localhost:4001/api/v1/course/create`,
+        `${BACKEND_URL}/course/create`,
         formData,
         {
           headers: {
