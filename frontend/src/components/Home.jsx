@@ -65,16 +65,16 @@ const Home = () => {
         {/* Header */}
         <header className='flex items-center justify-between mt-5' >
           <Link to={"/"} className='flex items-center gap-2'>
-            <img src="/logo.png" alt="Logo" className='h-10 w-auto rounded-full bg-red-300' />    {/* logo */}
-            <h1 className='font-medium text-2xl text-orange-500'>Course Selling App</h1>
+            <img src="/logo.png" alt="Logo" className='h-8 sm:h-10 w-auto rounded-full bg-red-300' />    {/* logo */}
+            <h1 className='font-medium text-md sm:text-2xl text-orange-500'>SkillHarbor</h1>
           </Link>
           <div className='space-x-4'>
             {isLoggedIn ? (
               <button onClick={handleLogOut} className='bg-transparent text-white py-1 px-4 border border-white rounded cursor-pointer'>Logout</button>
             ) : (
               <>
-                <Link to={"/login"} className='bg-transparent text-white py-2 px-4 border border-white rounded'>Login</Link>
-                <Link to={"/signup"} className='bg-orange-500 text-white py-2 px-4 rounded'>Signup</Link>
+                <Link to={"/login"} className='text-xs sm:text-base font-medium bg-transparent text-white py-1.5 px-2 sm:py-2 sm:px-4 border border-white/50 rounded hover:bg-orange-500 transition-colors duration-200'>Login</Link>
+                <Link to={"/signup"} className='text-xs sm:text-base font-medium bg-orange-500 text-white py-1.5 px-2 sm:py-2 sm:px-4 rounded border border-orange-500 hover:bg-white hover:text-black transition-colors duration-200'>Signup</Link>
               </>
             )}
           </div>
@@ -82,7 +82,7 @@ const Home = () => {
 
         {/* Section 1 */}
         <section className='text-center mt-8'>
-          <h1 className='font-medium text-4xl text-orange-500 mb-8'>Course Selling App</h1>
+          <h1 className='font-medium text-4xl text-orange-500 mb-8'>SkillHarbor</h1>
           <p className='text-gray-500'>Sharpen your skills with courses crafted by experts.</p>
           <div className='space-x-4 mt-4'>
             <Link to={"/courses"} className='bg-green-500 text-white rounded font-semibold hover:bg-white duration-300 hover:text-black px-5 py-2'>Explore Courses</Link>
@@ -136,20 +136,34 @@ const Home = () => {
         {/* Footer */}
         <footer>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-            <div className='flex flex-col items-center md:items-start'>
+
+            {/* Left Footer - Logo and Social Media */}
+            <div className='flex flex-col items-center md:items-start space-y-3'>
+
               <div className='flex items-center gap-2'>
                 <img src="/logo.png" alt="Logo" className='h-10 w-auto rounded-full bg-red-300' />    {/* logo */}
-                <h1 className='font-medium text-2xl text-orange-500'>Course Selling App</h1>
+                <h1 className='font-medium text-2xl text-orange-500'>SkillHarbor</h1>
               </div>
-              <div className='mt-3 ml-2 md:ml-8'>
-                <p className='mb-2'>Follow Us</p>
+
+              {/* Social Media Links */}
+              <div className='space-y-1'>
+                <p className=''>Follow Us</p>
                 <div className='flex space-x-4'>
                   <a href=""><FaFacebook /></a>
                   <a href=""><FaInstagram /></a>
                   <a href=""><FaXTwitter /></a>
                 </div>
               </div>
+
+              {/* Copyright */}
+              <div>
+                <h3 className='font-thin'>
+                  Md Ajmal Hussain &copy; 2026
+                </h3>
+              </div>
             </div>
+
+            {/* Middle Footer -  */}
             <div className='flex flex-col items-center'>
               <h3 className='font-bold text-xl mb-2'>Quick Links</h3>
               <ul className='list-none space-y-2 text-gray-400'>
@@ -158,8 +172,10 @@ const Home = () => {
                 <li className='hover:text-white duration-300'><a href="">Github- learn coding</a></li>
               </ul>
             </div>
+
+            {/* Right Footer - Help and Support */}
             <div className='flex flex-col items-center'>
-              <h3 className='font-bold text-xl mb-2'>Copyright &copy; 2026</h3>
+              <h3 className='font-bold text-xl mb-2'>Help & Support</h3>
               <ul className='list-none space-y-2 text-gray-400'>
                 <li className='hover:text-white duration-300'><a href="">Terms & Conditions</a></li>
                 <li className='hover:text-white duration-300'><a href="">Privacy & Policy</a></li>

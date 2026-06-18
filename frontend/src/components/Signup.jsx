@@ -34,6 +34,9 @@ export default function Signup() {
     }
   }
 
+  // input class
+  const inputClass = "w-full p-1.5 sm:p-3 rounded-md bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500";
+
   return (
     <div className="bg-linear-to-r from-black to-blue-950 min-h-screen p-2">
       <div className='text-white container mx-auto'>
@@ -42,19 +45,19 @@ export default function Signup() {
         <header className='flex items-center justify-between mt-5' >
           <Link to={"/"} className='flex items-center gap-2'>
             <img src="/logo.png" alt="Logo" className='h-8 sm:h-10 w-auto rounded-full bg-red-300' />    {/* logo */}
-            <h1 className='font-medium text-md sm:text-2xl text-orange-500'>Course Selling App</h1>
+            <h1 className='font-medium text-md sm:text-2xl text-orange-500'>SkillHarbor</h1>
           </Link>
 
           {/*  */}
           <div className='space-x-4'>
-            <Link to={"/login"} className='text-xs sm:text-base bg-transparent text-white py-1.5 px-2 sm:py-2 sm:px-4 border border-white/50 rounded hover:bg-orange-500 transition-colors duration-200'>Login</Link>
-            <Link to={"/join"} className='text-xs sm:text-base bg-orange-500 text-white py-1.5 px-2 sm:py-2 sm:px-4 rounded border border-orange-500 hover:bg-white hover:text-black transition-colors duration-200'>Join now</Link>
+            <Link to={"/login"} className='text-xs sm:text-base font-medium bg-transparent text-white py-1.5 px-2 sm:py-2 sm:px-4 border border-white/50 rounded hover:bg-orange-500 transition-colors duration-200'>Login</Link>
+            <Link to={"/admin/signup"} className='text-xs sm:text-base font-medium bg-orange-500 text-white py-1.5 px-2 sm:py-2 sm:px-4 rounded border border-orange-500 hover:bg-white hover:text-black transition-colors duration-200'>Join now</Link>
           </div>
         </header>
 
         {/* Signup Form */}
-        <div className='bg-gray-900 p-8 rounded-lg shadow-lg w-85 sm:w-120 mt-20 mx-auto'>
-          <h2 className='text-2xl font-bold mb-4 text-center'>Welcome to <span className='text-orange-500'>Course Selling App</span></h2>
+        <div className='bg-gray-900 p-8 rounded-lg shadow-lg w-75 sm:w-120 mt-10 sm:mt-20 mx-auto'>
+          <h2 className='text-2xl font-bold mb-4 text-center'>Welcome to <span className='text-orange-500'>SkillHarbor</span></h2>
           <p className='text-center text-gray-400 mb-6'>Just Signup To Join Us!</p>
 
           <form onSubmit={handleSubmit}>
@@ -67,7 +70,7 @@ export default function Signup() {
                 id="firstName"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className='w-full p-3 rounded-md bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className={inputClass}
                 placeholder='Enter your first name'
                 required />
             </div>
@@ -80,7 +83,7 @@ export default function Signup() {
                 id="lastName"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                className='w-full p-3 rounded-md bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className={inputClass}
                 placeholder='Enter your last name'
                 required />
             </div>
@@ -93,7 +96,7 @@ export default function Signup() {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className='w-full p-3 rounded-md bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className={inputClass}
                 placeholder='Enter your email'
                 required />
             </div>
@@ -106,7 +109,7 @@ export default function Signup() {
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className='w-full p-3 rounded-md bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className={inputClass}
                 placeholder='********'
                 required />
             </div>
@@ -120,7 +123,10 @@ export default function Signup() {
 
             {/* Button */}
             <div className='mt-4'>
-              <button className='bg-orange-500 text-white rounded font-semibold hover:bg-white hover:text-black px-5 py-3 w-full'>Signup</button>
+              <button
+                className='bg-orange-500 text-white rounded font-semibold hover:bg-blue-600 px-5 py-2 sm:py-3 w-full transition-colors duration-200 cursor-pointer'>
+                Signup
+              </button>
             </div>
 
           </form>
