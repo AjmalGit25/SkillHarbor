@@ -133,7 +133,7 @@ const Home = () => {
 
         <hr className='my-8' />
 
-        {/* Footer */}
+        {/* Footer ======================================================== */}
         <footer>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
 
@@ -167,9 +167,9 @@ const Home = () => {
             <div className='flex flex-col items-center'>
               <h3 className='font-bold text-xl mb-2'>Quick Links</h3>
               <ul className='list-none space-y-2 text-gray-400'>
-                <li className='hover:text-white duration-300'><a href="">Youtube- learn coding</a></li>
-                <li className='hover:text-white duration-300'><a href="">Linkedin- learn coding</a></li>
-                <li className='hover:text-white duration-300'><a href="">Github- learn coding</a></li>
+                <li className='hover:text-white duration-300'><a href="">Youtube - SkillHarbor</a></li>
+                <li className='hover:text-white duration-300'><a href="">Linkedin - SkillHarbor</a></li>
+                <li className='hover:text-white duration-300'><a href="">Github - SkillHarbor</a></li>
               </ul>
             </div>
 
