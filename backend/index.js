@@ -53,10 +53,11 @@ cloudinary.config({
 console.log("Stripe Key:", process.env.STRIPE_SECRET_KEY);
 
 try {
+  console.log('Connecting to MongoDB...', DB_URI ? 'URI exists' : 'URI MISSING');
   await mongoose.connect(DB_URI);
   console.log('Database connected to MongoDB');
 } catch (error) {
-  console.log('Database not connected to MongoDB', error);
+  console.log('Database not connected to MongoDB', error.message);
 }
 
 // base routes

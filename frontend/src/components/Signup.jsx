@@ -31,7 +31,7 @@ export default function Signup() {
 
     } catch (error) {
       if (error.response) {
-        setErrorMessage(error.response.data.message || "Signup failed!!");
+        setErrorMessage((error.response.data.error || error.response.data.message) || "Signup failed!!");
       }
     }
   }

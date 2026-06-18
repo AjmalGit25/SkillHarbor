@@ -54,7 +54,7 @@ export const signup = async (req, res) => {
   } catch (error) {
     console.log("Error in creating user", error);
     res.clearCookie("jwt");
-    return res.status(500).json({ success: false, message: "Failed to create user!", });
+    return res.status(500).json({ success: false, message: "Failed to create user!", error: error.message });
   }
 }
 
@@ -93,7 +93,7 @@ export const login = async (req, res) => {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),    // 1 day
       httpOnly: true,                                         // Can't be accessed by client side scripts (JavaScript)
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "None" : "Strict",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
     };
     res.cookie("jwt", token, cookieOptions);
 
