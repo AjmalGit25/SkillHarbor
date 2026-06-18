@@ -19,18 +19,12 @@ export const signup = async (req, res) => {
   const parsedData = userSchema.safeParse(req.body);
 
   if (!parsedData.success) {
-    return res.status(400).json({
-      success: false,
-      message: parsedData.error.issues.map((err) => err.message),
-    });
+    return res.status(400).json({ success: false, message: parsedData.error.issues.map((err) => err.message) });
   }
 
   try {
     if (!firstName || !lastName || !email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields are required",
-      });
+      return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
     const existingUser = await User.findOne({ email: email });
@@ -60,10 +54,8 @@ export const signup = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in creating user", error);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to create user",
-    });
+    res.clearCookie("jwt");
+    return res.status(500).json({ success: false, message: "Failed to create user!", });
   }
 }
 
@@ -133,7 +125,7 @@ export const logout = async (req, res) => {
     }
 
     res.clearCookie("jwt");
-    
+
     return res.status(200).json({
       success: true,
       message: "Logout successful",

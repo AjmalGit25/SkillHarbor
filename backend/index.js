@@ -19,14 +19,22 @@ const DB_URI = process.env.MONGO_URI;
 
 const app = express();
 
-// middlware
+// Middlwares ======================
+
+// JSON parser
 app.use(express.json());
+
+// Cookie parser
 app.use(cookieParser());
+
+// File upload
 app.use(
   fileUpload({
     useTempFiles: true,
     tempFileDir: '/tmp/',
   }));
+
+// Cors origin allow
 app.use(cors({
   origin: process.env.FRONTEND_URL,
   credentials: true, // <-- REQUIRED backend setting
@@ -51,7 +59,7 @@ try {
   console.log('Database not connected to MongoDB', error);
 }
 
-// define the routes
+// base routes
 app.use("/api/v1/course", courseRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/admin", adminRouter);
