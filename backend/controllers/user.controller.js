@@ -43,7 +43,7 @@ export const signup = async (req, res) => {
       email,
       password: hashPassword,
     });
-    
+
     console.log("User created successfully", user);
 
     return res.status(200).json({
@@ -104,13 +104,9 @@ export const login = async (req, res) => {
       token,
     });
   } catch (error) {
-    // if login fails
     res.clearCookie("jwt");
     console.log("Error in logging in", error);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to login",
-    });
+    return res.status(500).json({ success: false, message: "User login failed!" });
   }
 }
 

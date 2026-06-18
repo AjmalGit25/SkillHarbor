@@ -57,10 +57,8 @@ export const signup = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in creating admin", error);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to create admin",
-    });
+    res.clearCookie("jwt");
+    return res.status(500).json({ success: false, message: "Failed to create admin!", error: error.message });
   }
 }
 
@@ -99,7 +97,7 @@ export const login = async (req, res) => {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),    // 1 day
       httpOnly: true,                                         // Can't be accessed by client side scripts (JavaScript)
       secure: process.env.NODE_ENV === "production",          // true for production (http), false for development (https only)
-      sameSite: "Strict",                                     // CSRF protection
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",                                     // CSRF protection
     };
 
     res.cookie("jwt", token, cookieOptions);
@@ -110,11 +108,11 @@ export const login = async (req, res) => {
       admin,
       token,
     });
+
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Admin login failed!",
-    });
+    res.clearCookie("jwt");
+    console.log("Error in logging in", error);
+    return res.status(500).json({ success: false, message: "Admin login failed!" });
   }
 }
 
