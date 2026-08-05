@@ -100,7 +100,7 @@ export default function Login() {
 
             {/* Error Message */}
             {errorMessage && (
-              <div className='border border-red-500 mb-4 rounded'>
+              <div className='text-red-500'>
                 {errorMessage}
               </div>
             )}
