@@ -15,7 +15,6 @@ export default function AdminLogin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(email, password);
 
     try {
       const response = await axios.post(
@@ -23,10 +22,9 @@ export default function AdminLogin() {
         { email, password },
         { withCredentials: true, headers: { "Content-Type": "application/json" } }
       );
-      console.log("Admin Login successful", response.data);
+
       toast.success(response.data.message);
       localStorage.setItem("admin", JSON.stringify(response.data));
-      
       navigate("/admin/dashboard");
     } catch (error) {
       if (error.response) {
@@ -59,7 +57,6 @@ export default function AdminLogin() {
               className='text-xs sm:text-base font-medium bg-transparent text-white py-1.5 px-2 sm:py-2 sm:px-4 border border-white/50 rounded hover:bg-orange-500 transition-colors duration-200'>
               Signup
             </Link>
-            
           </div>
         </header>
 
@@ -119,7 +116,7 @@ export default function AdminLogin() {
               <button
                 className='bg-orange-500 text-white rounded font-semibold hover:bg-blue-600 px-5 py-2 sm:py-3 w-full transition-colors duration-200 cursor-pointer'
               >
-                Signup
+                Login
               </button>
             </div>
 
