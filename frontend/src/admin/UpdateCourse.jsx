@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { BACKEND_URL } from "../utils/utils";
 
 export default function UpdateCourse() {
-  const { id } = useParams();
+  const { courseId: id } = useParams();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -29,6 +29,7 @@ export default function UpdateCourse() {
         setImage(data.course.image.url);
         setImagePreview(data.course.image.url);
         setLoading(false);
+        console.log("Fetched course data: ", data.course);
       } catch (error) {
         console.log("Error in fetching course data: ", error);
         toast.error("Failed to fetch course data");
@@ -92,7 +93,6 @@ export default function UpdateCourse() {
   if (loading) {
     return <p className="text-center text-gray-500">Loading...</p>;
   }
-
 
   return (
     <div>
