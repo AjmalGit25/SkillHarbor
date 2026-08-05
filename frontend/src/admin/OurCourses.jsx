@@ -27,6 +27,7 @@ export default function OurCourses() {
         );
         setCourses(response.data.courses);
         setLoading(false);
+        console.log("Fetched courses: ", response.data.courses);
       } catch (error) {
         console.log("Error while fetching courses: ", error);
       }
@@ -89,16 +90,14 @@ export default function OurCourses() {
               {course.title}
             </h2>
             {/* Course Description */}
-            <p className="text-gray-600 mt-2 text-sm">
-              {course.description.length > 200
-                ? `${course.description.slice(0, 200)}...`
-                : course.description}
+            <p className="text-gray-600 mt-2 text-sm line-clamp-2">
+              {course.description}
             </p>
             {/* Course Price */}
             <div className="flex justify-between mt-4 text-gray-800 font-bold">
               <div>
                 {" "}
-                ₹{course.price}{" "}
+                {course.price !== 0 ? `₹${course.price}` : "Free"}{" "}
                 <span className="line-through text-gray-500">₹300</span>
               </div>
               <div className="text-green-600 text-sm mt-2">10 % off</div>
