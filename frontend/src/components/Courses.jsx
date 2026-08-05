@@ -165,17 +165,15 @@ export default function Courses() {
                   <img
                     src={course.image.url}
                     alt={course.title}
-                    className="rounded mb-4"
+                    className="rounded mb-4 object-contain h-40 w-full"
                   />
                   <h2 className="font-bold text-lg mb-2">{course.title}</h2>
-                  <p className="text-gray-600 mb-4">
-                    {course.description.length > 100
-                      ? `${course.description.slice(0, 100)}...`
-                      : course.description}
+                  <p className="text-gray-600 mb-4 line-clamp-2">
+                    {course.description}
                   </p>
                   <div className="flex justify-between items-center mb-4">
                     <span className="font-bold text-xl">
-                      ₹{course.price}{" "}
+                      ₹{course.price !== 0 ? course.price : "Free"}{" "}
                       <span className="text-gray-500 line-through">5999</span>
                     </span>
                     <span className="text-green-600">20% off</span>
