@@ -3,9 +3,6 @@ import { FaFacebook, FaInstagram } from 'react-icons/fa';
 import { FaXTwitter } from "react-icons/fa6";
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
-import "swiper/css"; // Import Swiper styles
 import toast from 'react-hot-toast';
 
 import { BACKEND_URL } from "../utils/utils.js";
@@ -91,44 +88,16 @@ const Home = () => {
         </section>
 
         {/* Slider */}
-        <section className='text-center mt-8'>
-          <Swiper
-            modules={[Autoplay]}
-            spaceBetween={20}
-            slidesPerView={2}   // key line
-            loop={true}
-            autoplay={{
-              delay: 1000,              // continuous effect
-              disableOnInteraction: false,
-            }}
-            speed={2000}                // controls smoothness
-          >
-            {
-              courses.map((course) => (
-                <SwiperSlide key={course._id}>
-                  <div className='relative flex justify-center p-3'>
-                    <div className='bg-gray-900 rounded-lg overflow-hidden flex flex-col items-center gap-2 w-80 p-3 hover:scale-105 duration-300'>
-
-                      <img
-                        src={course.image.url}
-                        alt={course.title}
-                        className='h-30 w-auto object-contain'
-                      />
-
-                      <h2 className='font-bold text-lg text-center'>
-                        {course.title}
-                      </h2>
-
-                      <button className='rounded-full bg-orange-500 p-1 px-4 cursor-pointer text-white hover:bg-white duration-300 hover:text-orange-500'>
-                        Enroll Now
-                      </button>
-
-                    </div>
-                  </div>
-                </SwiperSlide>
-              ))
-            }
-          </Swiper>
+        <section className='mt-8 overflow-hidden'>
+          <div className='flex scroll-track w-max p-5'>
+            {[...courses, ...courses].map((course, i) => (
+              <div key={i} className='bg-gray-900 rounded-lg overflow-hidden flex flex-col items-center gap-2 w-64 p-3 mx-3 hover:scale-105 duration-300 shrink-0'>
+                <img src={course.image.url} alt={course.title} className='h-30 w-auto object-contain' />
+                <h2 className='font-bold text-lg text-center'>{course.title}</h2>
+                <button className='rounded-full bg-orange-500 p-1 px-4 cursor-pointer text-white hover:bg-white duration-300 hover:text-orange-500'>Enroll Now</button>
+              </div>
+            ))}
+          </div>
         </section>
 
         <hr className='my-8' />
