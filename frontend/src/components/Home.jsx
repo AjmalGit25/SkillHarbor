@@ -62,8 +62,11 @@ const Home = () => {
         {/* Header */}
         <header className='flex items-center justify-between mt-5' >
           <Link to={"/"} className='flex items-center gap-2'>
-            <img src="/logo.png" alt="Logo" className='h-8 sm:h-10 w-auto rounded-full bg-red-300' />    {/* logo */}
-            <h1 className='font-medium text-md sm:text-2xl text-orange-500'>SkillHarbor</h1>
+            <img src="/logo.png" alt="Logo" className='h-8 sm:h-10 w-auto rounded-full' />    {/* logo */}
+            <h1 className='font-medium text-md sm:text-2xl '>
+              <span className='bg-linear-to-l from-sky-500 to-blue-800 bg-clip-text text-transparent'>Skill</span>
+              <span className='text-white'>Harbor</span>
+            </h1>
           </Link>
           <div className='space-x-4'>
             {isLoggedIn ? (
@@ -77,13 +80,75 @@ const Home = () => {
           </div>
         </header>
 
-        {/* Section 1 */}
-        <section className='text-center mt-8'>
-          <h1 className='font-medium text-4xl text-orange-500 mb-8'>SkillHarbor</h1>
-          <p className='text-gray-500'>Sharpen your skills with courses crafted by experts.</p>
-          <div className='space-x-4 mt-4'>
-            <Link to={"/courses"} className='bg-green-500 text-white rounded font-semibold hover:bg-white duration-300 hover:text-black px-5 py-2'>Explore Courses</Link>
-            <Link to={""} className='bg-white text-black rounded font-semibold hover:text-white duration-300 hover:bg-green-500 px-5 py-2'>Courses Videos</Link>
+        {/* Hero Section */}
+        <section className='text-center mt-14 mb-10'>
+          <span className='inline-block bg-sky-500/10 border border-sky-500/30 text-sky-400 text-xs font-semibold px-4 py-1 rounded-full mb-5 tracking-widest uppercase'>🎓 Learn. Build. Grow.</span>
+          <h1 className='text-3xl sm:text-5xl md:text-7xl font-extrabold leading-tight'>
+            <span className='bg-linear-to-l from-sky-500 to-blue-800 bg-clip-text text-transparent'>Skill</span>
+            <span className='text-white'>Harbor</span>
+          </h1>
+          <p className='text-gray-400 mt-4 text-base sm:text-lg max-w-xl mx-auto leading-relaxed'>
+            Sharpen your skills with courses crafted by industry experts. Learn at your own pace, earn certificates, and land your dream job.
+          </p>
+          <div className='flex flex-wrap justify-center gap-4 mt-8'>
+            <Link to={'/courses'} className='bg-sky-500 hover:bg-sky-400 text-white font-semibold px-7 py-2.5 rounded-full transition-colors duration-200'>Explore Courses</Link>
+            <Link to={'/signup'} className='bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-7 py-2.5 rounded-full transition-colors duration-200'>Get Started Free</Link>
+          </div>
+        </section>
+
+        {/* Stats Bar */}
+        <section className='grid grid-cols-2 sm:grid-cols-4 gap-4 my-10'>
+          {[
+            { value: '10K+', label: 'Students Enrolled' },
+            { value: '120+', label: 'Expert Courses' },
+            { value: '50+', label: 'Top Instructors' },
+            { value: '4.8★', label: 'Average Rating' },
+          ].map(({ value, label }) => (
+            <div key={label} className='bg-white/5 border border-white/10 rounded-xl py-5 text-center'>
+              <p className='text-2xl font-bold text-sky-400'>{value}</p>
+              <p className='text-gray-400 text-sm mt-1'>{label}</p>
+            </div>
+          ))}
+        </section>
+
+        {/* Why SkillHarbor */}
+        <section className='my-12'>
+          <h2 className='text-center text-2xl font-bold text-white mb-8'>Why <span className='text-sky-400'>SkillHarbor?</span></h2>
+          <div className='grid grid-cols-1 sm:grid-cols-3 gap-6'>
+            {[
+              { icon: '🚀', title: 'Learn at Your Pace', desc: 'Access course content anytime, anywhere. No deadlines, no pressure — just pure learning.' },
+              { icon: '🏆', title: 'Expert Instructors', desc: 'Every course is built by industry professionals with real-world experience.' },
+              { icon: '📜', title: 'Earn Certificates', desc: 'Get recognized certificates upon completion to boost your resume and LinkedIn.' },
+            ].map(({ icon, title, desc }) => (
+              <div key={title} className='bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-sky-500/50 hover:bg-white/10 transition-all duration-300'>
+                <div className='text-4xl mb-3'>{icon}</div>
+                <h3 className='text-white font-semibold text-lg mb-2'>{title}</h3>
+                <p className='text-gray-400 text-sm leading-relaxed'>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Testimonials */}
+        <section className='my-12'>
+          <h2 className='text-center text-2xl font-bold text-white mb-8'>What Our <span className='text-sky-400'>Students Say</span></h2>
+          <div className='grid grid-cols-1 sm:grid-cols-3 gap-6'>
+            {[
+              { name: 'Rahul Sharma', role: 'Frontend Developer', text: 'SkillHarbor helped me land my first dev job. The courses are practical and straight to the point!', avatar: '👨‍💻' },
+              { name: 'Priya Mehta', role: 'UI/UX Designer', text: 'Amazing platform! I completed 3 courses in a month and got a freelance project right after.', avatar: '👩‍🎨' },
+              { name: 'Arjun Patel', role: 'Data Analyst', text: 'The instructors are top-notch. I went from zero to job-ready in just 2 months.', avatar: '👨‍💼' },
+            ].map(({ name, role, text, avatar }) => (
+              <div key={name} className='bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-sky-500/40 transition-all duration-300'>
+                <p className='text-gray-300 text-sm leading-relaxed mb-4'>"{text}"</p>
+                <div className='flex items-center gap-3'>
+                  <span className='text-3xl'>{avatar}</span>
+                  <div>
+                    <p className='text-white font-semibold text-sm'>{name}</p>
+                    <p className='text-sky-400 text-xs'>{role}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -110,8 +175,11 @@ const Home = () => {
             <div className='flex flex-col items-center md:items-start space-y-3'>
 
               <div className='flex items-center gap-2'>
-                <img src="/logo.png" alt="Logo" className='h-10 w-auto rounded-full bg-red-300' />    {/* logo */}
-                <h1 className='font-medium text-2xl text-orange-500'>SkillHarbor</h1>
+                <img src="/logo.png" alt="Logo" className='h-10 w-auto rounded-full' />    {/* logo */}
+                <h1 className='font-medium text-md sm:text-2xl '>
+                  <span className='bg-linear-to-l from-sky-500 to-blue-800 bg-clip-text text-transparent'>Skill</span>
+                  <span className='text-white'>Harbor</span>
+                </h1>
               </div>
 
               {/* Social Media Links */}
@@ -136,9 +204,9 @@ const Home = () => {
             <div className='flex flex-col items-center'>
               <h3 className='font-bold text-xl mb-2'>Quick Links</h3>
               <ul className='list-none space-y-2 text-gray-400'>
-                <li className='hover:text-white duration-300'><a href="">Youtube - SkillHarbor</a></li>
-                <li className='hover:text-white duration-300'><a href="">Linkedin - SkillHarbor</a></li>
-                <li className='hover:text-white duration-300'><a href="">Github - SkillHarbor</a></li>
+                <li className='hover:text-sky-500 duration-300'><a href="">Youtube - SkillHarbor</a></li>
+                <li className='hover:text-sky-500 duration-300'><a href="">Linkedin - SkillHarbor</a></li>
+                <li className='hover:text-sky-500 duration-300'><a href="https://github.com/AjmalGit25/SkillHarbor">Github - SkillHarbor</a></li>
               </ul>
             </div>
 
@@ -146,9 +214,9 @@ const Home = () => {
             <div className='flex flex-col items-center'>
               <h3 className='font-bold text-xl mb-2'>Help & Support</h3>
               <ul className='list-none space-y-2 text-gray-400'>
-                <li className='hover:text-white duration-300'><a href="">Terms & Conditions</a></li>
-                <li className='hover:text-white duration-300'><a href="">Privacy & Policy</a></li>
-                <li className='hover:text-white duration-300'><a href="">Refunds & Cancellation</a></li>
+                <li className='hover:text-sky-500 duration-300'><a href="">Terms & Conditions</a></li>
+                <li className='hover:text-sky-500 duration-300'><a href="">Privacy & Policy</a></li>
+                <li className='hover:text-sky-500 duration-300'><a href="">Refunds & Cancellation</a></li>
               </ul>
             </div>
           </div>
