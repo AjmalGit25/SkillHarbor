@@ -23,12 +23,10 @@ import CourseCreate from './admin/CourseCreate.jsx';
 import OurCourses from './admin/OurCourses.jsx';
 import UpdateCourse from './admin/UpdateCourse.jsx';
 
-const user = JSON.parse(localStorage.getItem("user"));
-const admin = JSON.parse(localStorage.getItem("admin"));
 
 const router = createBrowserRouter([
   {
-    path: "/", element: <App />, 
+    path: "/", element: <App />,
 
     children: [
       { path: "/", element: <Home /> },
@@ -41,12 +39,12 @@ const router = createBrowserRouter([
   // Other routes
   { path: "/courses", element: <Courses /> },
   { path: "/buy/:courseId", element: <Buy /> },
-  { path: "/purchases", element: user ? <Purchases /> : <Navigate to="/login" />},
+  { path: "/purchases", element: localStorage.getItem("user") ? <Purchases /> : <Navigate to="/login" /> },
 
   // Admin routes
   { path: "/admin/signup", element: <AdminSignup /> },
   { path: "/admin/login", element: <AdminLogin /> },
-  { path: "/admin/dashboard", element: admin ? <AdminDashboard /> : <Navigate to="/admin/login" /> },
+  { path: "/admin/dashboard", element: localStorage.getItem("admin") ? <AdminDashboard /> : <Navigate to="/admin/login" /> },
   { path: "/admin/create-course", element: <CourseCreate /> },
   { path: "/admin/our-courses", element: <OurCourses /> },
   { path: "/admin/update-course/:courseId", element: <UpdateCourse /> },
