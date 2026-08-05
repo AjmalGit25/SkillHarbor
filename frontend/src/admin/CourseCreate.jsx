@@ -66,74 +66,89 @@ export default function CourseCreate() {
   };
 
   return (
-    <div>
-      <div className="min-h-screen  py-10 px-2">
-        <div className="max-w-4xl mx-auto p-6 border border-gray-400 rounded-lg shadow-lg">
-          <h3 className="text-2xl font-semibold mb-8">Create Course</h3>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-950 to-black flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-2xl">
 
-          <form onSubmit={handleCreateCourse} className="space-y-6">
+        {/* Card */}
+        <div className="bg-gray-900/80 backdrop-blur-sm border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+
+          {/* Card Header */}
+          <div className="bg-gradient-to-r from-orange-500 to-orange-600 px-8 py-6">
+            <h3 className="text-2xl font-bold text-white tracking-wide">✦ Create New Course</h3>
+            <p className="text-orange-100 text-sm mt-1">Fill in the details to publish a new course</p>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleCreateCourse} className="px-8 py-8 space-y-6">
 
             {/* Title */}
-            <div className="space-y-2">
-              <label className="block text-lg">Title</label>
+            <div className="space-y-1.5">
+              <label className="block text-sm font-semibold text-gray-300 uppercase tracking-wider">Course Title</label>
               <input
                 type="text"
-                placeholder="Enter your course title"
+                placeholder="e.g. Complete React Developer Course"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-400   rounded-md outline-none"
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 text-white rounded-lg outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 placeholder-gray-500 transition-colors duration-200"
               />
             </div>
 
             {/* Description */}
-            <div className="space-y-2">
-              <label className="block text-lg">Description</label>
-              <input
-                type="text"
-                placeholder="Enter your course description"
+            <div className="space-y-1.5">
+              <label className="block text-sm font-semibold text-gray-300 uppercase tracking-wider">Description</label>
+              <textarea
+                rows={4}
+                placeholder="Describe what students will learn..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-400   rounded-md outline-none"
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 text-white rounded-lg outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 placeholder-gray-500 transition-colors duration-200 resize-none"
               />
             </div>
 
             {/* Price */}
-            <div className="space-y-2">
-              <label className="block text-lg">Price</label>
-              <input
-                type="number"
-                placeholder="Enter your course price"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-400   rounded-md outline-none"
-              />
+            <div className="space-y-1.5">
+              <label className="block text-sm font-semibold text-gray-300 uppercase tracking-wider">Price (₹)</label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-semibold">₹</span>
+                <input
+                  type="number"
+                  placeholder="499"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  className="w-full pl-8 pr-4 py-3 bg-gray-800 border border-gray-700 text-white rounded-lg outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 placeholder-gray-500 transition-colors duration-200"
+                />
+              </div>
             </div>
 
             {/* Course Image */}
-            <div className="space-y-2">
-              <label className="block text-lg">Course Image</label>
+            <div className="space-y-1.5">
+              <label className="block text-sm font-semibold text-gray-300 uppercase tracking-wider">Course Thumbnail</label>
+
               {/* Image Preview */}
-              <div className="flex items-center justify-center">
-                <img
-                  src={imagePreview ? `${imagePreview}` : ""}
-                  alt="Image"
-                  className="h-50 w-auto max-w-sm rounded-md object-cover"
-                />
-              </div>
-              {/* Image Input */}
-              <input
-                type="file"
-                onChange={changePhotoHandler}
-                className="w-full px-3 py-2 border border-gray-400   rounded-md outline-none"
-              />
+              {imagePreview && (
+                <div className="flex justify-center mb-3">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="h-44 w-auto rounded-xl object-cover border-2 border-orange-500/50 shadow-lg"
+                  />
+                </div>
+              )}
+
+              {/* File Input */}
+              <label className="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-gray-600 rounded-xl cursor-pointer hover:border-orange-500 hover:bg-gray-800/50 transition-colors duration-200">
+                <span className="text-gray-400 text-sm">{imagePreview ? "Click to change image" : "📁 Click to upload thumbnail"}</span>
+                <span className="text-gray-600 text-xs mt-1">PNG, JPG, WEBP supported</span>
+                <input type="file" onChange={changePhotoHandler} className="hidden" />
+              </label>
             </div>
 
-            {/* Create Course Button */}
+            {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-200 cursor-pointer"
+              className="w-full py-3.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl transition-colors duration-200 cursor-pointer tracking-wide shadow-lg shadow-orange-500/20"
             >
-              Create Course
+              🚀 Publish Course
             </button>
           </form>
         </div>
