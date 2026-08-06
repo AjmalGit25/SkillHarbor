@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from "react-hot-toast";
+import Navbar from './Navbar';
 
 import { BACKEND_URL } from "../utils/utils.js";
 
@@ -26,7 +27,7 @@ export default function Login() {
       console.log("Login successful", response.data);
       toast.success(response.data.message);
       localStorage.setItem("user", JSON.stringify(response.data));
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       if (error.response) {
         setErrorMessage(error.response.data.message || "Login failed!!");
@@ -41,28 +42,9 @@ export default function Login() {
   const inputClass = "w-full p-1.5 sm:p-3 rounded-md bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500";
 
   return (
-    <div className="bg-linear-to-r from-black to-blue-950 min-h-screen p-2">
-      <div className='text-white container mx-auto'>
-
-        {/* Header */}
-        <header className='flex items-center justify-between mt-5' >
-          <Link to={"/"} className='flex items-center gap-2'>
-            <img src="/logo.png" alt="Logo" className='h-8 sm:h-10 w-auto rounded-full bg-red-300' />    {/* logo */}
-            <h1 className='font-medium text-md sm:text-2xl text-orange-500'>SkillHarbor</h1>
-          </Link>
-          <div className='space-x-4'>
-            <Link
-              to={"/signup"}
-              className='text-xs sm:text-base font-medium bg-transparent text-white py-1.5 px-2 sm:py-2 sm:px-4 border border-white/50 rounded hover:bg-orange-500 transition-colors duration-200'>
-              Signup
-            </Link>
-            <Link
-              to={"/admin/signup"}
-              className='text-xs sm:text-base font-medium bg-orange-500 text-white py-1.5 px-2 sm:py-2 sm:px-4 rounded border border-orange-500 hover:bg-white hover:text-black transition-colors duration-200'>
-              Join now
-            </Link>
-          </div>
-        </header>
+    <div className="bg-linear-to-r from-black to-blue-950 min-h-screen">
+      <Navbar />
+      <div className='text-white container mx-auto px-4'>
 
         {/* Login Form */}
         <div className='bg-gray-900 p-8 rounded-lg w-75 sm:w-120 shadow-lg mt-20 mx-auto'>
