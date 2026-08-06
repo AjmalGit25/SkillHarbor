@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import Navbar from './Navbar';
 
 import { BACKEND_URL } from "../utils/utils.js";
 
@@ -135,84 +136,48 @@ export default function Buy() {
   };
 
   return (
-    <>
+    <div className="bg-linear-to-r from-black to-blue-950 min-h-screen text-white">
+      <Navbar />
       {error ? (
-        <div className="flex justify-center items-center h-screen">
-          <div className="bg-red-100 text-red-700 px-6 py-4 rounded-lg">
-            <p className="text-lg font-semibold">{error}</p>
-            <Link
-              className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition duration-200 mt-3 flex items-center justify-center"
-              to={"/purchases"}
-            >
-              Purchases
-            </Link>
+        <div className="flex justify-center items-center h-[80vh]">
+          <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-8 py-6 rounded-2xl text-center">
+            <p className="text-4xl mb-3">⚠️</p>
+            <p className="text-lg font-semibold mb-4">{error}</p>
+            <Link className="bg-sky-500 hover:bg-sky-400 text-white py-2 px-6 rounded-full font-semibold transition-colors duration-200" to="/purchases">Go to Purchases</Link>
           </div>
         </div>
       ) : (
-        <div className="flex flex-col sm:flex-row my-40 container mx-auto">
-          <div className="w-full md:w-1/2">
-            <h1 className="text-xl font-semibold underline">Order Details</h1>
-            <div className="flex items-center text-center space-x-2 mt-4">
-              <h2 className="text-gray-600 text-sm">Total Price</h2>
-              <p className="text-red-500 font-bold">${course.price}</p>
-            </div>
-            <div className="flex items-center text-center space-x-2">
-              <h1 className="text-gray-600 text-sm">Course name</h1>
-              <p className="text-red-500 font-bold">{course.title}</p>
+        <div className="flex flex-col sm:flex-row gap-8 container mx-auto px-4 py-16">
+          <div className="w-full md:w-1/2 bg-white/5 border border-white/10 rounded-2xl p-8">
+            <h1 className="text-2xl font-bold mb-6 text-white">Order Summary</h1>
+            <div className="space-y-3 text-gray-300">
+              <div className="flex justify-between border-b border-white/10 pb-3">
+                <span>Course</span>
+                <span className="text-white font-semibold">{course.title}</span>
+              </div>
+              <div className="flex justify-between border-b border-white/10 pb-3">
+                <span>Price</span>
+                <span className="text-sky-400 font-bold text-xl">₹{course.price}</span>
+              </div>
             </div>
           </div>
-          <div className="w-full md:w-1/2 flex justify-center items-center">
-            <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-sm">
-              <h2 className="text-lg font-semibold mb-4">
-                Process your Payment!
-              </h2>
-              <div className="mb-4">
-                <label
-                  className="block text-gray-700 text-sm mb-2"
-                  htmlFor="card-number"
-                >
-                  Credit/Debit Card
-                </label>
-                <form onSubmit={handlePurchase}>
-                  <CardElement
-                    options={{
-                      style: {
-                        base: {
-                          fontSize: "16px",
-                          color: "#424770",
-                          "::placeholder": {
-                            color: "#aab7c4",
-                          },
-                        },
-                        invalid: {
-                          color: "#9e2146",
-                        },
-                      },
-                    }}
-                  />
-
-                  <button
-                    type="submit"
-                    disabled={!stripe || loading} // Disable button when loading
-                    className="mt-8 w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-600 transition duration-200"
-                  >
-                    {loading ? "Processing..." : "Pay"}
-                  </button>
-                </form>
-                {cardError && (
-                  <p className="text-red-500 font-semibold text-xs">
-                    {cardError}
-                  </p>
-                )}
-              </div>
-
-              <button className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition duration-200 mt-3 flex items-center justify-center">
-                <span className="mr-2">🅿️</span> Other Payments Method
-              </button>
+          <div className="w-full md:w-1/2">
+            <div className="bg-white rounded-2xl shadow-xl p-8">
+              <h2 className="text-lg font-bold text-gray-800 mb-6">Payment Details</h2>
+              <label className="block text-gray-600 text-sm mb-2">Credit / Debit Card</label>
+              <form onSubmit={handlePurchase}>
+                <div className="border border-gray-300 rounded-lg p-3 mb-6">
+                  <CardElement options={{ style: { base: { fontSize: '16px', color: '#424770', '::placeholder': { color: '#aab7c4' } }, invalid: { color: '#9e2146' } } }} />
+                </div>
+                {cardError && <p className="text-red-500 text-xs mb-4">{cardError}</p>}
+                <button type="submit" disabled={!stripe || loading} className="w-full bg-sky-500 hover:bg-sky-400 disabled:opacity-50 text-white py-3 rounded-full font-bold transition-colors duration-200 cursor-pointer">
+                  {loading ? 'Processing...' : `Pay ₹${course.price}`}
+                </button>
+              </form>
             </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }
