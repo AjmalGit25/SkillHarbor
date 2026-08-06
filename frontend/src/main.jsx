@@ -14,6 +14,7 @@ import Login from './components/Login.jsx';
 import Signup from "./components/Signup.jsx"
 import Courses from './components/Courses.jsx';
 import Purchases from './components/Purchases.jsx';
+import UserDashboard from './components/UserDashboard.jsx';
 
 // Admin Pages
 import AdminSignup from './admin/AdminSignup.jsx';
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
   { path: "/courses", element: <Courses /> },
   { path: "/buy/:courseId", element: <Buy /> },
   { path: "/purchases", element: localStorage.getItem("user") ? <Purchases /> : <Navigate to="/login" /> },
+  { path: "/dashboard", element: localStorage.getItem("user") ? <UserDashboard /> : <Navigate to="/login" /> },
 
   // Admin routes
   { path: "/admin/signup", element: <AdminSignup /> },
