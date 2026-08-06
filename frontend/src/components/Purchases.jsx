@@ -1,183 +1,134 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { IoLogIn, IoLogOut } from "react-icons/io5";
-import { FaDiscourse } from "react-icons/fa";
-import { FaDownload } from "react-icons/fa6";
-import { IoMdSettings } from "react-icons/io";
-import { RiHome2Fill } from "react-icons/ri";
-import { HiMenu, HiX } from "react-icons/hi"; // Import menu and close icons
+import toast from 'react-hot-toast';
+import { FaDownload, FaBookOpen } from 'react-icons/fa';
+import Navbar from './Navbar';
 
-import { BACKEND_URL } from "../utils/utils.js";
+import { BACKEND_URL } from '../utils/utils.js';
 
 export default function Purchases() {
-  const [purchase, setPurchase] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to toggle sidebar
+  const [purchases, setPurchases] = useState([]);
+  const [loading, setLoading]     = useState(true);
+  const [error, setError]         = useState('');
 
-  // Check token
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      setIsLoggedIn(true);
-    }
-    else {
-      setIsLoggedIn(false);
-    }
-  }, []);
+    const stored = localStorage.getItem('user');
+    if (!stored) { setError('Please login to view your purchases.'); setLoading(false); return; }
 
-  // Logout Ajmal&786
-  const handleLogOut = async () => {
-    try {
-      const response = axios.get(`${BACKEND_URL}/user/logout`, {
-        withCredentials: true,
-      });
-      toast.success((await response).data.message);
-      setIsLoggedIn(false);
-      localStorage.removeItem("user");
-    } catch (error) {
-      setErrorMessage("Error in logging out!!");
-    }
-  };
-
-  // Fetch purchases
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const token = user.token;
+    const token = JSON.parse(stored).token;
     const fetchPurchases = async () => {
-      if (!token) {
-        setErrorMessage("Please login to purchase the course!");
-        return;
-      }
-
       try {
-        const response = await axios.get(`${BACKEND_URL}/user/purchases`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },
-            withCredentials: true,
-          });
-        setPurchase(response.data.courseData);
-      } catch (error) {
-        setErrorMessage("Failed to fetch purchased course data.");
+        const res = await axios.get(`${BACKEND_URL}/user/purchases`, {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        });
+        setPurchases(res.data.courseData);
+      } catch (err) {
+        toast.error('Failed to fetch purchases.');
+        setError('Failed to load your purchases. Please try again.');
+      } finally {
+        setLoading(false);
       }
-    }
+    };
     fetchPurchases();
   }, []);
 
-  // Toggle sidebar for mobile devices
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
   return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <div
-        className={`fixed inset-y-0 left-0 bg-gray-100 p-5 transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } md:translate-x-0 transition-transform duration-300 ease-in-out w-64 z-50`}
-      >
-        <nav>
-          <ul className="mt-16 md:mt-0">
-            <li className="mb-4">
-              <Link to="/" className="flex items-center">
-                <RiHome2Fill className="mr-2" /> Home
-              </Link>
-            </li>
-            <li className="mb-4">
-              <Link to="/courses" className="flex items-center">
-                <FaDiscourse className="mr-2" /> Courses
-              </Link>
-            </li>
-            <li className="mb-4">
-              <a href="#" className="flex items-center text-blue-500">
-                <FaDownload className="mr-2" /> Purchases
-              </a>
-            </li>
-            <li className="mb-4">
-              <Link to="/settings" className="flex items-center">
-                <IoMdSettings className="mr-2" /> Settings
-              </Link>
-            </li>
-            <li>
-              {isLoggedIn ? (
-                <button onClick={handleLogOut} className="flex items-center">
-                  <IoLogOut className="mr-2" /> Logout
-                </button>
-              ) : (
-                <Link to="/login" className="flex items-center">
-                  <IoLogIn className="mr-2" /> Login
-                </Link>
-              )}
-            </li>
-          </ul>
-        </nav>
-      </div>
+    <div className="bg-linear-to-r from-black to-blue-950 min-h-screen text-white">
+      <Navbar />
 
-      {/* Sidebar Toggle Button (Mobile) */}
-      <button
-        className="fixed top-4 left-4 z-50 md:hidden bg-blue-600 text-white p-2 rounded-lg"
-        onClick={toggleSidebar}
-      >
-        {isSidebarOpen ? (
-          <HiX className="text-2xl" />
-        ) : (
-          <HiMenu className="text-2xl" />
-        )}
-      </button>
+      <main className="container mx-auto px-4 py-10">
 
-      {/* Main Content */}
-      <div
-        className={`flex-1 p-8 bg-gray-50 transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"
-          } md:ml-64`}
-      >
-        <h2 className="text-xl font-semibold mt-6 md:mt-0 mb-6">
-          My Purchases
-        </h2>
+        {/* Page Header */}
+        <div className="flex items-center gap-3 mb-2">
+          <div className="bg-sky-500/20 border border-sky-500/30 p-2.5 rounded-xl">
+            <FaDownload className="text-sky-400 text-lg" />
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">My Purchases</h1>
+        </div>
+        <p className="text-gray-400 text-sm mb-10 ml-1">All the courses you've enrolled in, in one place.</p>
 
-        {/* Error message */}
-        {errorMessage && (
-          <div className="text-red-500 text-center mb-4">{errorMessage}</div>
+        {/* Loading */}
+        {loading && (
+          <div className="flex justify-center items-center h-52">
+            <div className="w-10 h-10 border-4 border-sky-500 border-t-transparent rounded-full animate-spin" />
+          </div>
         )}
 
-        {/* Render purchases */}
-        {purchase.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {purchase.map((purchase, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-lg shadow-md p-6 mb-6"
-              >
-                <div className="flex flex-col items-center space-y-4">
-                  {/* Course Image */}
-                  <img
-                    className="rounded-lg w-full h-48 object-cover"
-                    src={
-                      purchase.image?.url || "https://via.placeholder.com/200"
-                    }
-                    alt={purchase.title}
-                  />
-                  <div className="text-center">
-                    <h3 className="text-lg font-bold">{purchase.title}</h3>
-                    <p className="text-gray-500">
-                      {purchase.description.length > 100
-                        ? `${purchase.description.slice(0, 100)}...`
-                        : purchase.description}
-                    </p>
-                    <span className="text-green-700 font-semibold text-sm">
-                      ₹{purchase.price} only
+        {/* Error */}
+        {!loading && error && (
+          <div className="text-center py-20 bg-white/5 border border-white/10 rounded-2xl">
+            <p className="text-5xl mb-4">🔒</p>
+            <p className="text-gray-400 mb-6">{error}</p>
+            <Link to="/login" className="bg-sky-500 hover:bg-sky-400 text-white px-6 py-2.5 rounded-full font-semibold transition-colors duration-200">
+              Login
+            </Link>
+          </div>
+        )}
+
+        {/* Empty */}
+        {!loading && !error && purchases.length === 0 && (
+          <div className="text-center py-20 bg-white/5 border border-white/10 rounded-2xl">
+            <p className="text-5xl mb-4">📭</p>
+            <p className="text-gray-400 mb-2 text-lg font-medium">No purchases yet</p>
+            <p className="text-gray-500 text-sm mb-6">Explore our courses and start learning today.</p>
+            <Link to="/courses" className="bg-sky-500 hover:bg-sky-400 text-white px-6 py-2.5 rounded-full font-semibold transition-colors duration-200">
+              Browse Courses
+            </Link>
+          </div>
+        )}
+
+        {/* Purchases count badge */}
+        {!loading && !error && purchases.length > 0 && (
+          <>
+            <div className="flex items-center gap-3 mb-6">
+              <span className="bg-sky-500/20 border border-sky-500/30 text-sky-400 text-xs font-semibold px-3 py-1 rounded-full">
+                {purchases.length} course{purchases.length !== 1 ? 's' : ''} purchased
+              </span>
+            </div>
+
+            {/* Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {purchases.map((course, i) => (
+                <div
+                  key={i}
+                  className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden flex flex-col hover:border-sky-500/50 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300"
+                >
+                  {/* Thumbnail */}
+                  <div className="relative">
+                    <img
+                      src={course.image?.url || '/logo.png'}
+                      alt={course.title}
+                      className="w-full h-44 object-cover"
+                    />
+                    {/* Purchased badge */}
+                    <span className="absolute top-3 left-3 flex items-center gap-1 bg-green-500/90 text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+                      ✓ Purchased
                     </span>
                   </div>
+
+                  {/* Content */}
+                  <div className="p-5 flex flex-col flex-1">
+                    <h3 className="text-white font-bold text-base mb-1 line-clamp-1">{course.title}</h3>
+                    <p className="text-gray-400 text-sm line-clamp-2 mb-4 flex-1 leading-relaxed">{course.description}</p>
+
+                    {/* Footer row */}
+                    <div className="flex items-center justify-between pt-3 border-t border-white/10">
+                      <span className="text-sky-400 font-bold text-lg">₹{course.price}</span>
+                      <div className="flex items-center gap-1.5 text-xs text-gray-400 bg-white/5 px-2.5 py-1 rounded-full">
+                        <FaBookOpen className="text-sky-400" />
+                        Enrolled
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-500">You have no purchases yet.</p>
+              ))}
+            </div>
+          </>
         )}
-      </div>
+
+      </main>
     </div>
   );
 }
