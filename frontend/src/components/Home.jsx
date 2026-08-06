@@ -3,40 +3,23 @@ import { FaFacebook, FaInstagram } from 'react-icons/fa';
 import { FaXTwitter } from "react-icons/fa6";
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
+import Counter from './Counter';
+import Navbar from './Navbar';
 
 import { BACKEND_URL } from "../utils/utils.js";
 
 const Home = () => {
   const [courses, setCourses] = useState([]);
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // token
+  // Scroll reveal
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      setIsLoggedIn(true);
-    }
-    else {
-      setIsLoggedIn(false);
-    }
-  }, []);
-
-  // Logout
-  const handleLogOut = async () => {
-    try {
-      const response = axios.get(`${BACKEND_URL}/user/logout`, {
-        withCredentials: true,
-      });
-      toast.success((await response).data.message);
-      setIsLoggedIn(false);
-      localStorage.removeItem("user");
-    } catch (error) {
-      console.log("Error in logging out ", error);
-      toast.error(error.response.data.message || "Error in logging out!!");
-    }
-  };
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach(e => e.target.classList.toggle('show', e.isIntersecting)),
+      { threshold: 0.15 }
+    );
+    document.querySelectorAll('.card').forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, [courses]);
 
   // Fetch courses
   useEffect(() => {
@@ -56,29 +39,10 @@ const Home = () => {
 
 
   return (
-    <div className="bg-linear-to-r from-black to-blue-950 min-h-screen p-2">
-      <div className='text-white container mx-auto'>
+    <div className="bg-linear-to-r from-black to-blue-950 min-h-screen text-white">
 
-        {/* Header */}
-        <header className='flex items-center justify-between mt-5' >
-          <Link to={"/"} className='flex items-center gap-2'>
-            <img src="/logo.png" alt="Logo" className='h-8 sm:h-10 w-auto rounded-full' />    {/* logo */}
-            <h1 className='font-medium text-md sm:text-2xl '>
-              <span className='bg-linear-to-l from-sky-500 to-blue-800 bg-clip-text text-transparent'>Skill</span>
-              <span className='text-white'>Harbor</span>
-            </h1>
-          </Link>
-          <div className='space-x-4'>
-            {isLoggedIn ? (
-              <button onClick={handleLogOut} className='bg-transparent text-white py-1 px-4 border border-white rounded cursor-pointer'>Logout</button>
-            ) : (
-              <>
-                <Link to={"/login"} className='text-xs sm:text-base font-medium bg-transparent text-white py-1.5 px-2 sm:py-2 sm:px-4 border border-white/50 rounded hover:bg-orange-500 transition-colors duration-200'>Login</Link>
-                <Link to={"/signup"} className='text-xs sm:text-base font-medium bg-orange-500 text-white py-1.5 px-2 sm:py-2 sm:px-4 rounded border border-orange-500 hover:bg-white hover:text-black transition-colors duration-200'>Signup</Link>
-              </>
-            )}
-          </div>
-        </header>
+      <Navbar />
+      <main className="container mx-auto px-4 py-10">
 
         {/* Hero Section */}
         <section className='text-center mt-14 mb-10'>
@@ -99,13 +63,14 @@ const Home = () => {
         {/* Stats Bar */}
         <section className='grid grid-cols-2 sm:grid-cols-4 gap-4 my-10'>
           {[
-            { value: '10K+', label: 'Students Enrolled' },
-            { value: '120+', label: 'Expert Courses' },
-            { value: '50+', label: 'Top Instructors' },
-            { value: '4.8★', label: 'Average Rating' },
+            { value: 1751, label: 'Students Enrolled' },
+            { value: 120, label: 'Expert Courses' },
+            { value: 50, label: 'Top Instructors' },
+            { value: 4.5, label: 'Average Rating' },
           ].map(({ value, label }) => (
             <div key={label} className='bg-white/5 border border-white/10 rounded-xl py-5 text-center'>
-              <p className='text-2xl font-bold text-sky-400'>{value}</p>
+              <p className='text-2xl font-bold text-sky-400'><Counter end={value} /></p>
+
               <p className='text-gray-400 text-sm mt-1'>{label}</p>
             </div>
           ))}
@@ -153,7 +118,7 @@ const Home = () => {
         </section>
 
         {/* Slider */}
-        <section className='mt-8 overflow-hidden'>
+        <section className='mt-8 overflow-hidden card'>
           <div className='flex scroll-track w-max p-5'>
             {[...courses, ...courses].map((course, i) => (
               <div key={i} className='bg-gray-900 rounded-lg overflow-hidden flex flex-col items-center gap-2 w-64 p-3 mx-3 hover:scale-105 duration-300 shrink-0'>
@@ -169,7 +134,7 @@ const Home = () => {
 
         {/* Footer ======================================================== */}
         <footer>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-6 card'>
 
             {/* Left Footer - Logo and Social Media */}
             <div className='flex flex-col items-center md:items-start space-y-3'>
@@ -221,9 +186,8 @@ const Home = () => {
             </div>
           </div>
         </footer>
-      </div>
+      </main>
     </div>
-
   )
 }
 
