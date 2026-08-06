@@ -1,197 +1,196 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { IoLogIn, IoLogOut } from "react-icons/io5";
-import { IoHome } from "react-icons/io5";
-import { FaDiscourse } from "react-icons/fa";
-import { FaCircleUser } from "react-icons/fa6";
-import { FaDownload } from "react-icons/fa6";
-import { IoMdSettings } from "react-icons/io";
-import { FiSearch } from "react-icons/fi";
-import { HiMenu, HiX } from "react-icons/hi"; // Import menu and close icons
+import toast from 'react-hot-toast';
+import { FiSearch } from 'react-icons/fi';
+import { FaFacebook, FaInstagram } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
+import Navbar from './Navbar';
 
-import { BACKEND_URL } from "../utils/utils.js";
+import { BACKEND_URL } from '../utils/utils.js';
 
 export default function Courses() {
   const [courses, setCourses] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [filtered, setFiltered] = useState([]);
+  const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to toggle sidebar
 
-  // Check token
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      setIsLoggedIn(true);
-    }
-    else {
-      setIsLoggedIn(false);
-    }
-  }, []);
-
-  // Logout Ajmal&786
-  const handleLogOut = async () => {
-    try {
-      const response = axios.get(`${BACKEND_URL}/user/logout`, {
-        withCredentials: true,
-      });
-      toast.success((await response).data.message);
-      setIsLoggedIn(false);
-      localStorage.removeItem("user");
-    } catch (error) {
-      console.log("Error in logging out ", error);
-      toast.error(error.response.data.message || "Error in logging out!!");
-    }
-  };
-
-  // Fetch courses
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/course/courses`,
-          { withCredentials: true }
-        );
+        const response = await axios.get(`${BACKEND_URL}/course/courses`, { withCredentials: true });
         setCourses(response.data.courses);
+        setFiltered(response.data.courses);
         setLoading(false);
       } catch (error) {
-        console.log("Error while fetching courses: ", error);
+        console.log('Error while fetching courses: ', error);
+        setLoading(false);
       }
-    }
-
+    };
     fetchCourses();
   }, []);
 
-  // Toggle sidebar for mobile devices
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  // Search filter
+  useEffect(() => {
+    const q = search.toLowerCase();
+    setFiltered(courses.filter(c => c.title.toLowerCase().includes(q) || c.description.toLowerCase().includes(q)));
+  }, [search, courses]);
+
+  // Scroll reveal
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver(
+  //     (entries) => entries.forEach(e => e.target.classList.toggle('show', e.isIntersecting)),
+  //     { threshold: 0.1 }
+  //   );
+  //   document.querySelectorAll('.card').forEach(el => observer.observe(el));
+  //   return () => observer.disconnect();
+  // }, [filtered]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+          observer.unobserve(entry.target); // Stop observing after first reveal
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll(".card").forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [filtered]);
 
   return (
-    <div className='flex'>
-      {/* Hamburger menu button for mobile */}
-      <button
-        className="md:hidden fixed top-4 left-4 z-20 text-3xl text-gray-800"
-        onClick={toggleSidebar}
-      >
-        {isSidebarOpen ? <HiX /> : <HiMenu />} {/* Toggle menu icon */}
-      </button>
+    <div className="bg-linear-to-r from-black to-blue-950 min-h-screen text-white">
+      <Navbar />
+      <main className="container mx-auto px-4 py-10">
 
-      {/* Sidebar */}
-      <aside
-        className={`fixed top-0 left-0 h-screen bg-gray-100 w-64 p-5 transform z-10 transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } md:translate-x-0 md:static`}
-      >
-        <div className='flex items-center mb-10'>
-          <img
-            src="/logo.png" alt="logo"
-            className='rounded-full h-12 w-12' />
-        </div>
-        <nav>
-          <ul>
-            <li className="mb-4">
-              <a href="/" className="flex items-center">
-                <IoHome className="mr-2" /> Home
-              </a>
-            </li>
-            <li className="mb-4">
-              <a href="#" className="flex items-center text-blue-500">
-                <FaDiscourse className="mr-2" /> Courses
-              </a>
-            </li>
-            <li className="mb-4">
-              <a href="/purchases" className="flex items-center">
-                <FaDownload className="mr-2" /> Purchases
-              </a>
-            </li>
-            <li className="mb-4">
-              <a href="#" className="flex items-center">
-                <IoMdSettings className="mr-2" /> Settings
-              </a>
-            </li>
-            <li>
-              {isLoggedIn ? (
-                <Link to={"/"}
-                  onClick={handleLogOut}
-                  className="flex items-center cursor-pointer"
-                >
-                  <IoLogOut className="mr-2" /> Logout
-                </Link>
-              ) : (
-                <Link to={"/login"} className="flex items-center">
-                  <IoLogIn className="mr-2" /> Login
-                </Link>
-              )}
-            </li>
-          </ul>
-        </nav>
-      </aside>
+        {/* Page Hero */}
+        <section className="text-center mt-14 mb-10">
+          <span className="inline-block bg-sky-500/10 border border-sky-500/30 text-sky-400 text-xs font-semibold px-4 py-1 rounded-full mb-5 tracking-widest uppercase">📚 All Courses</span>
+          <h1 className="text-3xl sm:text-5xl font-extrabold leading-tight">
+            Explore Our <span className="bg-linear-to-l from-sky-500 to-blue-800 bg-clip-text text-transparent">Courses</span>
+          </h1>
+          <p className="text-gray-400 mt-4 text-base max-w-xl mx-auto leading-relaxed">
+            Browse our full library of expert-crafted courses. Find the right one and start learning today.
+          </p>
 
-      {/* Main content */}
-      <main className="ml-0 md:ml-20 w-full bg-white p-10">
-        <header className="flex justify-between items-center mb-10">
-          <h1 className="text-xl font-bold">Courses</h1>
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center">
+          {/* Search Bar */}
+          <div className="flex items-center justify-center mt-8">
+            <div className="flex items-center bg-white/5 border border-white/15 rounded-full px-4 py-2 w-full max-w-md focus-within:border-sky-500 transition-colors duration-200">
+              <FiSearch className="text-gray-400 text-lg mr-3 shrink-0" />
               <input
                 type="text"
-                placeholder="Type here to search..."
-                className="border border-gray-300 rounded-l-full px-4 py-2 h-10 focus:outline-none"
+                placeholder="Search courses..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="bg-transparent text-white placeholder-gray-500 outline-none w-full text-sm"
               />
-              <button className="h-10 border border-gray-300 rounded-r-full px-4 flex items-center justify-center">
-                <FiSearch className="text-xl text-gray-600" />
-              </button>
             </div>
-
-            <FaCircleUser className="text-4xl text-blue-600" />
           </div>
-        </header>
+        </section>
 
-        {/* Vertically Scrollable Courses Section */}
-        <div className="overflow-y-auto h-[75vh]">
+        {/* Courses Grid */}
+        <section className="my-10">
           {loading ? (
-            <p className="text-center text-gray-500">Loading...</p>
-          ) : courses.length === 0 ? (
-            // Check if courses array is empty
-            <p className="text-center text-gray-500">
-              No course posted yet by admin
-            </p>
-          ) : (
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {courses.map((course) => (
-                <div
-                  key={course._id}
-                  className="border border-gray-200 rounded-lg p-4 shadow-sm"
-                >
-                  <img
-                    src={course.image.url}
-                    alt={course.title}
-                    className="rounded mb-4 object-contain h-40 w-full"
-                  />
-                  <h2 className="font-bold text-lg mb-2">{course.title}</h2>
-                  <p className="text-gray-600 mb-4 line-clamp-2">
-                    {course.description}
-                  </p>
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="font-bold text-xl">
-                      ₹{course.price !== 0 ? course.price : "Free"}{" "}
-                      <span className="text-gray-500 line-through">5999</span>
-                    </span>
-                    <span className="text-green-600">20% off</span>
-                  </div>
-
-                  {/* Buy page */}
-                  <Link
-                    to={`/buy/${course._id}`} // Pass courseId in URL
-                    className="bg-orange-500 w-full text-white px-4 py-2 rounded-lg hover:bg-blue-900 duration-300"
-                  >
-                    Buy Now
-                  </Link>
-                </div>
-              ))}
+            <div className="flex justify-center items-center h-48">
+              <div className="w-10 h-10 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
             </div>
+          ) : filtered.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-4xl mb-4">🔍</p>
+              <p className="text-gray-400 text-lg">No courses found{search ? ` for "${search}"` : ''}.</p>
+            </div>
+          ) : (
+            <>
+              <p className="text-gray-400 text-sm mb-6">{filtered.length} course{filtered.length !== 1 ? 's' : ''} found</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filtered.map((course) => (
+                  <div key={course._id} className="card bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-sky-500/50 hover:bg-white/10 transition-all duration-300 flex flex-col">
+                    <div className="relative">
+                      <img
+                        src={course.image.url}
+                        alt={course.title}
+                        className="w-full h-44 object-cover"
+                      />
+                      <span className="absolute top-3 right-3 bg-green-500/90 text-white text-xs font-semibold px-2.5 py-1 rounded-full">20% off</span>
+                    </div>
+                    <div className="p-5 flex flex-col flex-1">
+                      <h2 className="font-bold text-lg text-white mb-2 line-clamp-1">{course.title}</h2>
+                      <p className="text-gray-400 text-sm leading-relaxed line-clamp-2 mb-4 flex-1">{course.description}</p>
+                      <div className="flex items-center justify-between mb-4">
+                        <div>
+                          {course.price !== 0 ? (
+                            <span className="text-white font-semibold">₹{course.price}</span>
+                          ) : (
+                            <span className="text-green-500 font-semibold">Free</span>
+                          )}
+                          <span className="text-gray-500 line-through text-sm ml-2">₹5999</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-yellow-400 text-sm">
+                          ★★★★★
+                        </div>
+                      </div>
+                      <Link
+                        to={`/buy/${course._id}`}
+                        className="block text-center bg-sky-500 hover:bg-sky-400 text-white font-semibold py-2.5 rounded-full transition-colors duration-200"
+                      >
+                        Enroll Now
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
-        </div>
+        </section>
+
+        <hr className="my-8 border-white/10" />
+
+        {/* Footer */}
+        <footer>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 card">
+
+            <div className="flex flex-col items-center md:items-start space-y-3">
+              <div className="flex items-center gap-2">
+                <img src="/logo.png" alt="Logo" className="h-10 w-auto rounded-full" />
+                <h1 className="font-medium text-2xl">
+                  <span className="bg-linear-to-l from-sky-500 to-blue-800 bg-clip-text text-transparent">Skill</span>
+                  <span className="text-white">Harbor</span>
+                </h1>
+              </div>
+              <div className="space-y-1">
+                <p>Follow Us</p>
+                <div className="flex space-x-4">
+                  <a href=""><FaFacebook /></a>
+                  <a href=""><FaInstagram /></a>
+                  <a href=""><FaXTwitter /></a>
+                </div>
+              </div>
+              <h3 className="font-thin">Md Ajmal Hussain &copy; 2026</h3>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <h3 className="font-bold text-xl mb-2">Quick Links</h3>
+              <ul className="list-none space-y-2 text-gray-400">
+                <li className="hover:text-sky-500 duration-300"><a href="">Youtube - SkillHarbor</a></li>
+                <li className="hover:text-sky-500 duration-300"><a href="">Linkedin - SkillHarbor</a></li>
+                <li className="hover:text-sky-500 duration-300"><a href="https://github.com/AjmalGit25/SkillHarbor">Github - SkillHarbor</a></li>
+              </ul>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <h3 className="font-bold text-xl mb-2">Help & Support</h3>
+              <ul className="list-none space-y-2 text-gray-400">
+                <li className="hover:text-sky-500 duration-300"><a href="">Terms & Conditions</a></li>
+                <li className="hover:text-sky-500 duration-300"><a href="">Privacy & Policy</a></li>
+                <li className="hover:text-sky-500 duration-300"><a href="">Refunds & Cancellation</a></li>
+              </ul>
+            </div>
+          </div>
+        </footer>
       </main>
     </div>
-  )
+  );
 }
