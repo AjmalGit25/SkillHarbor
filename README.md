@@ -1,6 +1,6 @@
 # SkillHarbor
 
-A full-stack e-learning platform where instructors sell knowledge and learners build skills. Built with the MERN stack featuring JWT authentication, role-based access control, Stripe payments, Cloudinary image hosting, and a responsive UI.
+A full-stack e-learning platform where instructors sell knowledge and learners build skills. Built with the MERN stack featuring JWT authentication, role-based access control, Stripe payments, Cloudinary image hosting, course progress tracking, and certificate generation.
 
 ---
 
@@ -17,7 +17,7 @@ A full-stack e-learning platform where instructors sell knowledge and learners b
 - MongoDB, Mongoose
 - JWT (jsonwebtoken), bcrypt
 - Cloudinary (image uploads), express-fileupload
-- Stripe (payments), Zod (validation), cookie-parser, CORS
+- Stripe (payments), Zod (validation), cookie-parser, CORS, uuid
 
 ---
 
@@ -36,7 +36,12 @@ SkillHarbor/
 │   │   └── user.mid.js
 │   ├── models/
 │   │   ├── admin.model.js
+│   │   ├── assessment.model.js
+│   │   ├── certificate.model.js
 │   │   ├── course.model.js
+│   │   ├── courseProgress.model.js
+│   │   ├── lesson.model.js
+│   │   ├── module.model.js
 │   │   ├── order.model.js
 │   │   ├── purchase.model.js
 │   │   └── user.model.js
@@ -65,8 +70,10 @@ SkillHarbor/
     │   │   ├── Courses.jsx
     │   │   ├── Home.jsx
     │   │   ├── Login.jsx
+    │   │   ├── Navbar.jsx
     │   │   ├── Purchases.jsx
-    │   │   └── Signup.jsx
+    │   │   ├── Signup.jsx
+    │   │   └── UserDashboard.jsx
     │   ├── utils/
     │   │   └── utils.js
     │   ├── App.jsx
@@ -76,17 +83,98 @@ SkillHarbor/
 
 ---
 
+## Data Architecture
+
+```
+┌─────────────┐
+│    USER     │
+└──────┬──────┘
+       │ purchases
+       ▼
+┌─────────────┐
+│  PURCHASE   │  (enrollment record after Stripe payment)
+└──────┬──────┘
+       │
+       ▼
+┌──────────────────────────────────────────┐
+│                  COURSE                  │
+│  title · description · price · image     │
+│  adminId → Admin                         │
+└───────────────────┬──────────────────────┘
+                    │
+          ┌─────────┴─────────┐
+          ▼                   ▼
+    ┌───────────┐       ┌────────────┐
+    │  MODULE   │       │ ASSESSMENT │
+    │  order    │       │ (course or │
+    └─────┬─────┘       │  module)   │
+          │             └────────────┘
+   ┌──────┴──────┐
+   ▼             ▼
+┌────────┐   ┌────────┐
+│ LESSON │   │ LESSON │
+│videoUrl│   │duration│
+└────────┘   └────────┘
+
+USER + COURSE
+      │
+      ▼
+┌──────────────────────┐
+│    COURSE PROGRESS   │
+│  completedLessons[]  │
+│  completionPercent   │
+│  lastAccessed        │
+│  startedAt           │
+│  completedAt         │
+└──────────┬───────────┘
+           │ 100% complete
+           ▼
+    ┌─────────────┐
+    │ CERTIFICATE │
+    │ certificateId (uuid) │
+    │ issuedAt    │
+    └─────────────┘
+```
+
+---
+
+## Models
+
+| Model | File | Description |
+|-------|------|-------------|
+| User | `user.model.js` | Learner accounts |
+| Admin | `admin.model.js` | Instructor / admin accounts |
+| Course | `course.model.js` | Course with title, description, price, image |
+| Module | `module.model.js` | Ordered sections inside a course |
+| Lesson | `lesson.model.js` | Video lessons inside a module |
+| Assessment | `assessment.model.js` | Quiz attached to a course or module |
+| Purchase | `purchase.model.js` | Enrollment record (userId + courseId) |
+| Order | `order.model.js` | Stripe payment record |
+| CourseProgress | `courseProgress.model.js` | Per-user lesson completion + timestamps |
+| Certificate | `certificate.model.js` | Auto-generated on 100% course completion |
+
+### Key constraints
+- `CourseProgress` — unique index on `{ userId, courseId }` (one doc per user per course)
+- `Certificate` — unique index on `{ userId, courseId }` (one cert per user per course)
+- `Certificate.certificateId` — UUID v4, globally unique, usable for public verification
+- `Lesson.duration` — stored in seconds
+- `Assessment.moduleId` — optional; if omitted the assessment is course-level
+
+---
+
 ## Features
 
 ### User
-- Signup / Login / Logout with JWT (stored in HTTP-only cookies)
-- Browse all available courses
+- Signup / Login / Logout with JWT (HTTP-only cookies)
+- Browse and search all available courses
 - Purchase courses via Stripe payment
-- View purchased courses in a personal dashboard
+- Personal dashboard with enrolled courses and stats
+- Track lesson-by-lesson progress per course
+- Earn a certificate on 100% course completion
 
 ### Admin
 - Separate admin Signup / Login / Logout
-- Create courses with title, description, price, and thumbnail (uploaded to Cloudinary)
+- Create courses with title, description, price, and thumbnail (Cloudinary)
 - Update and delete existing courses
 - View all published courses
 
@@ -209,6 +297,7 @@ Frontend runs on `http://localhost:5173`
 | `/courses` | Courses | Public |
 | `/buy/:courseId` | Buy | User |
 | `/purchases` | Purchases | User (auth) |
+| `/dashboard` | UserDashboard | User (auth) |
 | `/admin/signup` | AdminSignup | Public |
 | `/admin/login` | AdminLogin | Public |
 | `/admin/dashboard` | AdminDashboard | Admin (auth) |
