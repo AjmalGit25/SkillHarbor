@@ -10,6 +10,7 @@ import courseRouter from './routes/course.route.js';
 import userRouter from './routes/user.route.js';
 import adminRouter from './routes/admin.route.js';
 import orderRouter from './routes/order.route.js';
+import moduleRouter from './routes/module.route.js';
 
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -36,7 +37,7 @@ app.use(
 
 // Cors origin allow
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: process.env.FRONTEND_URL, // <-- REQUIRED backend setting
   credentials: true, // <-- REQUIRED backend setting
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // <-- REQUIRED backend setting
   allowedHeaders: ['Content-Type', 'Authorization'], // <-- REQUIRED backend setting
@@ -65,6 +66,7 @@ app.use("/api/v1/course", courseRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/order", orderRouter);
+app.use("/api/v1/content", moduleRouter);
 
 app.get("/", (req, res)=> {
   res.send("Ajmal Hussain's Express Server! Hello, Welcome!");
