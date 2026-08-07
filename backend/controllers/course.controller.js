@@ -72,37 +72,41 @@ export const createCourse = async (req, res) => {
 export const updateCourse = async (req, res) => {
   const adminId = req.adminId;
   const { courseId } = req.params;
-  const { title, description, price, image } = req.body;
+  const { title, description, price } = req.body;
 
   try {
-    const course = await Course.findOneAndUpdate({
-      _id: courseId,
-      adminId,
-    }, {
-      title,
-      description,
-      price,
-      image: {
-        public_id: image?.public_id,
-        url: image?.url,
-      }
-    });
-
+    const course = await Course.findOne({ _id: courseId, adminId });
     if (!course) {
-      return res.status(404).json({
-        success: false,
-        message: "Can't update course! Created by other admin",
-      });
+      return res.status(404).json({ success: false, message: "Can't update course! Created by other admin" });
     }
 
-    return res.status(200).json({ message: "Course updated successfully", course });
+    const updateData = { title, description, price };
+
+    if (req.files?.image) {
+      const imageFile = req.files.image;
+      const allowedFormat = ['image/jpg', 'image/jpeg', 'image/png'];
+      if (!allowedFormat.includes(imageFile.mimetype)) {
+        return res.status(400).json({ success: false, message: 'Only JPEG, PNG and JPG files are allowed' });
+      }
+
+      // Delete old image from Cloudinary
+      if (course.image?.public_id) {
+        await cloudinary.uploader.destroy(course.image.public_id);
+      }
+
+      const result = await cloudinary.uploader.upload(imageFile.tempFilePath);
+      if (!result) {
+        return res.status(500).json({ success: false, message: 'Failed to upload image' });
+      }
+      updateData.image = { public_id: result.public_id, url: result.secure_url };
+    }
+
+    const updated = await Course.findByIdAndUpdate(courseId, updateData, { new: true });
+    return res.status(200).json({ message: 'Course updated successfully', course: updated });
 
   } catch (error) {
-    console.log("Error in updating course", error);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to update course!",
-    });
+    console.log('Error in updating course', error);
+    return res.status(500).json({ success: false, message: 'Failed to update course!' });
   }
 }
 
@@ -149,6 +153,17 @@ export const getAllCourses = async (req, res) => {
       success: false,
       message: "Failed to retrieve courses",
     });
+  }
+}
+
+export const getAdminCourses = async (req, res) => {
+  const adminId = req.adminId;
+  try {
+    const courses = await Course.find({ adminId });
+    return res.status(200).json({ success: true, courses });
+  } catch (error) {
+    console.log("Error in retrieving admin courses", error);
+    return res.status(500).json({ success: false, message: "Failed to retrieve courses" });
   }
 }
 
