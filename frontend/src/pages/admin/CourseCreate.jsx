@@ -100,7 +100,7 @@ export default function CourseCreate() {
   const validateStep1 = () => {
     if (!title.trim()) { toast.error('Course title is required'); return false; }
     if (!description.trim()) { toast.error('Course description is required'); return false; }
-    if (!price || price <= 0) { toast.error('Valid price is required'); return false; }
+    if (price === '' || price === null || Number(price) < 0) { toast.error('Valid price is required'); return false; }
     if (!image) { toast.error('Course thumbnail is required'); return false; }
     return true;
   };
