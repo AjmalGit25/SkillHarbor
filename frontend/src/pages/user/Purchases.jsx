@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { FaDownload, FaBookOpen } from 'react-icons/fa';
+import { FiPlayCircle } from 'react-icons/fi';
 import Navbar from '../../components/Navbar.jsx';
 
 import { BACKEND_URL } from '../../utils/utils.js';
@@ -115,11 +116,13 @@ export default function Purchases() {
 
                     {/* Footer row */}
                     <div className="flex items-center justify-between pt-3 border-t border-white/10">
-                      <span className="text-sky-400 font-bold text-lg">₹{course.price}</span>
-                      <div className="flex items-center gap-1.5 text-xs text-gray-400 bg-white/5 px-2.5 py-1 rounded-full">
-                        <FaBookOpen className="text-sky-400" />
-                        Enrolled
-                      </div>
+                      <span className="text-sky-400 font-bold text-lg">{course.price === 0 ? 'Free' : `₹${course.price}`}</span>
+                      <Link
+                        to={`/learn/${course._id}`}
+                        className="flex items-center gap-1.5 text-xs font-semibold bg-sky-500 hover:bg-sky-400 text-white px-3 py-1.5 rounded-full transition-colors duration-200"
+                      >
+                        <FiPlayCircle /> Start Learning
+                      </Link>
                     </div>
                   </div>
                 </div>
