@@ -18,8 +18,16 @@ const lessonSchema = new mongoose.Schema({
   description: {
     type: String,
   },
+  contentType: {
+    type: String,
+    enum: ['video', 'image', 'document', 'text'],
+    default: 'video',
+  },
   videoUrl: {
     type: String,
+  },
+  content: {
+    type: String, // text/notes content or document URL
   },
   duration: {
     type: Number, // in seconds
