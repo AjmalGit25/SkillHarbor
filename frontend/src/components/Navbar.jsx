@@ -40,7 +40,7 @@ export default function Navbar() {
     localStorage.removeItem('user');
     setIsLoggedIn(false);
     setUser(null);
-    navigate('/login');
+    navigate('/courses');
   };
 
   const isActive = (path) => location.pathname === path;
