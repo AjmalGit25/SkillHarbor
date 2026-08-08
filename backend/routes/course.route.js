@@ -6,7 +6,8 @@ import {
   getAllCourses,
   getAdminCourses,
   getCourseDetails,
-  buyCourse
+  buyCourse,
+  enrollFree
 } from '../controllers/course.controller.js';
 import userMiddleware from '../middlewares/user.mid.js';
 import adminMiddleware from '../middlewares/admin.mid.js';
@@ -21,5 +22,6 @@ router.get("/my-courses", adminMiddleware, getAdminCourses);
 router.get("/:courseId", getCourseDetails);
 
 router.post("/buy/:courseId", userMiddleware, buyCourse);
+router.post("/enroll-free/:courseId", userMiddleware, enrollFree);
 
 export default router;
