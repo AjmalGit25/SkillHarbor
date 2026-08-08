@@ -1,7 +1,11 @@
 import mongoose from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
 
 const certificateSchema = new mongoose.Schema({
+  certificateId: {
+    type: String,
+    unique: true,
+    required: true,
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -12,14 +16,20 @@ const certificateSchema = new mongoose.Schema({
     ref: 'Course',
     required: true,
   },
-  certificateId: {
+  studentName: {
     type: String,
-    default: () => uuidv4(),
-    unique: true,
+    required: true,
+  },
+  courseName: {
+    type: String,
+    required: true,
   },
   issuedAt: {
     type: Date,
-    default: Date.now,
+    required: true,
+  },
+  certificateUrl: {
+    type: String, // Cloudinary URL — used for future verification
   },
 }, { timestamps: true });
 
