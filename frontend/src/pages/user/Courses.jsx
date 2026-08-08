@@ -11,23 +11,46 @@ import { BACKEND_URL } from '../../utils/utils.js';
 
 export default function Courses() {
   const [courses, setCourses] = useState([]);
+  const [courseStats, setCourseStats] = useState({});
   const [filtered, setFiltered] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchCourses = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/course/courses`, { withCredentials: true });
-        setCourses(response.data.courses);
-        setFiltered(response.data.courses);
+        const { data } = await axios.get(`${BACKEND_URL}/course/courses`, { withCredentials: true });
+        const courseList = data.courses || [];
+        setCourses(courseList);
+        setFiltered(courseList);
         setLoading(false);
+
+        const stats = {};
+        await Promise.all(
+          courseList.map(async (course) => {
+            const { data: modData } = await axios.get(`${BACKEND_URL}/content/course/${course._id}/modules`, { withCredentials: true });
+            const moduleList = modData.modules || [];
+            const lessonCounts = await Promise.all(
+              moduleList.map(async (mod) => {
+                const { data: lessonData } = await axios.get(`${BACKEND_URL}/content/modules/${mod._id}/lessons`, { withCredentials: true });
+                return (lessonData.lessons || []).length;
+              })
+            );
+            stats[course._id] = {
+              modules: moduleList.length,
+              lessons: lessonCounts.reduce((a, b) => a + b, 0),
+            };
+          })
+        );
+
+        setCourseStats(stats);
       } catch (error) {
-        console.log('Error while fetching courses: ', error);
+        console.error(error);
+        toast.error('Failed to load courses');
         setLoading(false);
       }
     };
-    fetchCourses();
+    fetchData();
   }, []);
 
   // Search filter
@@ -36,16 +59,7 @@ export default function Courses() {
     setFiltered(courses.filter(c => c.title.toLowerCase().includes(q) || c.description.toLowerCase().includes(q)));
   }, [search, courses]);
 
-  // Scroll reveal
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver(
-  //     (entries) => entries.forEach(e => e.target.classList.toggle('show', e.isIntersecting)),
-  //     { threshold: 0.1 }
-  //   );
-  //   document.querySelectorAll('.card').forEach(el => observer.observe(el));
-  //   return () => observer.disconnect();
-  // }, [filtered]);
-
+  // Scroll reveal Animation
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -64,10 +78,10 @@ export default function Courses() {
   return (
     <div className="bg-linear-to-r from-black to-blue-950 min-h-screen text-white">
       <Navbar />
-      <main className="container mx-auto px-4 py-10">
+      <main className="px-4 py-5 sm:py-10">
 
         {/* Page Hero */}
-        <section className="text-center mt-14 mb-10">
+        <section className="text-center mb-10">
           <span className="inline-block bg-sky-500/10 border border-sky-500/30 text-sky-400 text-xs font-semibold px-4 py-1 rounded-full mb-5 tracking-widest uppercase">📚 All Courses</span>
           <h1 className="text-3xl sm:text-5xl font-extrabold leading-tight">
             Explore Our <span className="bg-linear-to-l from-sky-500 to-blue-800 bg-clip-text text-transparent">Courses</span>
@@ -105,20 +119,27 @@ export default function Courses() {
           ) : (
             <>
               <p className="text-gray-400 text-sm mb-6">{filtered.length} course{filtered.length !== 1 ? 's' : ''} found</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+
+                {/* Course Card */}
                 {filtered.map((course) => (
-                  <div key={course._id} className="card bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-sky-500/50 hover:bg-white/10 transition-all duration-300 flex flex-col">
-                    <div className="relative">
+                  <Link to={`/courses/${course._id}`} key={course._id} className="card bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-sky-500/50 hover:bg-white/10 transition-all duration-300 flex flex-col">
+                    <div className="relative p-3">
                       <img
                         src={course.image.url}
                         alt={course.title}
-                        className="w-full h-44 object-cover"
+                        className="w-full h-40 object-contain bg-slate-950 rounded-2xl"
                       />
                       <span className="absolute top-3 right-3 bg-green-500/90 text-white text-xs font-semibold px-2.5 py-1 rounded-full">20% off</span>
                     </div>
-                    <div className="p-5 flex flex-col flex-1">
-                      <h2 className="font-bold text-lg text-white mb-2 line-clamp-1">{course.title}</h2>
-                      <p className="text-gray-400 text-sm leading-relaxed line-clamp-2 mb-4 flex-1">{course.description}</p>
+                    <div className="flex flex-col flex-1 space-y-4 px-3">
+                      <h2 className="font-medium text-lg text-white line-clamp-1">{course.title}
+                      </h2>
+                      <hr className="text-slate-700" />
+                      <div className="flex items-center justify-between gap-3 text-sm text-gray-400 ">
+                        <span>📦 {courseStats[course._id]?.modules ?? '—'} Modules</span>
+                        <span>🎬 {courseStats[course._id]?.lessons ?? '—'} Lessons</span>
+                      </div>
                       <div className="flex items-center justify-between mb-4">
                         <div>
                           {course.price !== 0 ? (
@@ -132,14 +153,8 @@ export default function Courses() {
                           ★★★★★
                         </div>
                       </div>
-                      <Link
-                        to={`/buy/${course._id}`}
-                        className="block text-center bg-sky-500 hover:bg-sky-400 text-white font-semibold py-2.5 rounded-full transition-colors duration-200"
-                      >
-                        Enroll Now
-                      </Link>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </>
