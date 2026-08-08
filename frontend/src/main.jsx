@@ -15,6 +15,9 @@ import Courses from './pages/user/Courses.jsx';
 import Purchases from './pages/user/Purchases.jsx';
 import Buy from './pages/user/Buy.jsx';
 import Dashboard from './pages/user/Dashboard.jsx';
+import CourseDetails from './pages/user/CourseDetails.jsx';
+import Learn from './pages/user/Learn.jsx';
+import Coordinates from './pages/user/Coordinates.jsx';
 
 // Admin Pages
 import AdminSignup from './pages/admin/AdminSignup.jsx';
@@ -37,12 +40,14 @@ const router = createBrowserRouter([
       { path: "/login", element: <Login /> },
       { path: "/signup", element: <Signup /> },
       { path: "/courses", element: <Courses /> },
+      { path: "/courses/:courseId", element: <CourseDetails /> },
     ]
   },
 
-  // Other routes
-  { path: "/courses", element: <Courses /> },
+  // User routes
   { path: "/buy/:courseId", element: <Buy /> },
+  { path: "/coord", element: <Coordinates /> },
+  { path: "/learn/:courseId", element: <ProtectedUser><Learn /></ProtectedUser> },
   { path: "/purchases", element: <ProtectedUser><Purchases /></ProtectedUser> },
   { path: "/dashboard", element: <ProtectedUser><Dashboard /></ProtectedUser> },
 
