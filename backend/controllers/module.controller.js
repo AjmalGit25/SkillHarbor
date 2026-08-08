@@ -64,13 +64,13 @@ export const getModulesByCourse = async (req, res) => {
 
 export const createLesson = async (req, res) => {
   const { moduleId } = req.params;
-  const { courseId, title, description, videoUrl, duration, order } = req.body;
+  const { courseId, title, description, contentType, videoUrl, content, duration, order } = req.body;
 
   try {
     const module = await Module.findById(moduleId);
     if (!module) return res.status(404).json({ message: 'Module not found' });
 
-    const lesson = await Lesson.create({ courseId, moduleId, title, description, videoUrl, duration, order });
+    const lesson = await Lesson.create({ courseId, moduleId, title, description, contentType, videoUrl, content, duration, order });
     return res.status(201).json({ message: 'Lesson created successfully', lesson });
   } catch (error) {
     return res.status(500).json({ message: 'Failed to create lesson', error: error.message });
@@ -79,12 +79,12 @@ export const createLesson = async (req, res) => {
 
 export const updateLesson = async (req, res) => {
   const { lessonId } = req.params;
-  const { title, description, videoUrl, duration, order } = req.body;
+  const { title, description, contentType, videoUrl, content, duration, order } = req.body;
 
   try {
     const lesson = await Lesson.findByIdAndUpdate(
       lessonId,
-      { title, description, videoUrl, duration, order },
+      { title, description, contentType, videoUrl, content, duration, order },
       { new: true }
     );
     if (!lesson) return res.status(404).json({ message: 'Lesson not found' });
