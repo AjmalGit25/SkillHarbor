@@ -100,7 +100,7 @@ export default function CourseCreate() {
   const validateStep1 = () => {
     if (!title.trim()) { toast.error('Course title is required'); return false; }
     if (!description.trim()) { toast.error('Course description is required'); return false; }
-    if (!price || price <= 0) { toast.error('Valid price is required'); return false; }
+    if (!price || price < 0) { toast.error('Valid price is required'); return false; }
     if (!image) { toast.error('Course thumbnail is required'); return false; }
     return true;
   };
@@ -475,7 +475,7 @@ export default function CourseCreate() {
                     {/* Course summary card */}
                     <div className="flex gap-5 bg-white/5 border border-white/10 rounded-xl p-3">
                       {imagePreview && (
-                        <img src={imagePreview} alt="thumbnail" className="w-24 h-16 object-cover rounded-lg shrink-0 border border-white/10" />
+                        <img src={imagePreview} alt="thumbnail" className="w-24 h-18 object-cover rounded-lg shrink-0 border border-white/10" />
                       )}
                       <div>
                         <h3 className="text-white font-bold text-lg">{title}</h3>
