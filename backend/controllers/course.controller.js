@@ -194,6 +194,25 @@ export const getCourseDetails = async (req, res) => {
 }
 
 
+export const enrollFree = async (req, res) => {
+  const { userId } = req;
+  const { courseId } = req.params;
+
+  try {
+    const course = await Course.findById(courseId);
+    if (!course) return res.status(404).json({ success: false, message: 'Course not found' });
+    if (course.price !== 0) return res.status(400).json({ success: false, message: 'This is a paid course' });
+
+    const already = await Purchase.findOne({ userId, courseId });
+    if (already) return res.status(400).json({ success: false, message: 'Already enrolled' });
+
+    await Purchase.create({ userId, courseId });
+    return res.status(201).json({ success: true, message: 'Enrolled successfully' });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Enrollment failed' });
+  }
+};
+
 import Stripe from 'stripe';
 import config from '../config.js';
 const stripe = new Stripe(config.STRIPE_SECRET_KEY);
