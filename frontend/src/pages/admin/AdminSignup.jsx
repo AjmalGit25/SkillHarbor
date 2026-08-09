@@ -24,7 +24,7 @@ export default function AdminSignup() {
         { withCredentials: true, headers: { "Content-Type": "application/json" } });
       console.log("Admin Signup successful", response.data);
       toast.success(response.data.message);
-      
+
       navigate("/admin/login");
     } catch (error) {
       if (error.response) {
@@ -42,10 +42,12 @@ export default function AdminSignup() {
 
         {/* Header */}
         <header className='flex items-center justify-between mt-5' >
-          <Link to={"/"} className='flex items-center gap-2'>
-            <img src="/logo.png" alt="Logo"
-              className='h-8 sm:h-10 w-auto rounded-full bg-red-300' />    {/* logo */}
-            <h1 className='font-medium text-md sm:text-2xl text-orange-500'>SkillHarbor</h1>
+          <Link to="/admin/dashboard" className="flex items-center gap-2">
+            <img src="/logo.png" alt="Logo" className="h-9 w-auto rounded-full" />
+            <h3 className="text-xl font-semibold">
+              <span className="bg-linear-to-l from-sky-500 to-blue-800 bg-clip-text text-transparent">Skill</span>
+              <span className="text-white">Harbor</span>
+            </h3>
           </Link>
 
           {/* Buttons */}
@@ -55,7 +57,7 @@ export default function AdminSignup() {
               className='text-xs sm:text-base font-medium bg-transparent text-white py-1.5 px-2 sm:py-2 sm:px-4 border border-white/50 rounded hover:bg-orange-500 transition-colors duration-200'>
               Login
             </Link>
-            
+
           </div>
         </header>
 

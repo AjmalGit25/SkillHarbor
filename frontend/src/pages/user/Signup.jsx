@@ -47,7 +47,8 @@ export default function Signup() {
 
         {/* Signup Form */}
         <div className='bg-gray-900 p-8 rounded-lg shadow-lg w-75 sm:w-120 mt-10 sm:mt-20 mx-auto'>
-          <h2 className='text-2xl font-bold mb-4 text-center'>Welcome to
+          <h2 className='text-2xl font-bold mb-4 text-center'>
+            <span className="mr-2">Welcome to</span>
             <span className='bg-linear-to-l from-sky-500 to-blue-800 bg-clip-text text-transparent'>Skill</span>
             <span className='text-white'>Harbor</span></h2>
           <p className='text-center text-gray-400 mb-6'>Just Signup To Join Us!</p>

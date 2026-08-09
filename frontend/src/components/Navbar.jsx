@@ -27,8 +27,8 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const stored = localStorage.getItem('user');
-    if (stored) { setIsLoggedIn(true); setUser(JSON.parse(stored)); }
+    const userData = localStorage.getItem('user');
+    if (userData) { setIsLoggedIn(true); setUser(JSON.parse(userData).user); }
     else        { setIsLoggedIn(false); setUser(null); }
   }, [location.pathname]);   // re-check on every route change
 
@@ -58,10 +58,10 @@ export default function Navbar() {
       <nav className="hidden md:flex items-center justify-between px-8 py-4 border-b border-white/10 sticky top-0 z-40 bg-black/40 backdrop-blur-md">
         <Link to="/" className="flex items-center gap-2">
           <img src="/logo.png" alt="Logo" className="h-9 w-auto rounded-full" />
-          <span className="text-xl font-semibold">
+          <h3 className="text-xl font-semibold">
             <span className="bg-linear-to-l from-sky-500 to-blue-800 bg-clip-text text-transparent">Skill</span>
             <span className="text-white">Harbor</span>
-          </span>
+          </h3>
         </Link>
 
         <div className="flex items-center gap-1">
@@ -98,7 +98,7 @@ export default function Navbar() {
                   </div>
                   <div className="overflow-hidden">
                     <p className="text-white font-semibold text-sm truncate">
-                      {isLoggedIn ? (user?.email?.split('@')[0] ?? 'User') : 'Guest'}
+                      {isLoggedIn ? (user?.firstName + " " + user?.lastName ?? 'User') : 'Guest'}
                     </p>
                     <p className="text-gray-400 text-xs truncate">
                       {isLoggedIn ? (user?.email ?? '') : 'Not logged in'}
@@ -202,7 +202,7 @@ export default function Navbar() {
                 {isLoggedIn ? <FaUserAlt className="text-sky-400 text-xl" /> : <FaUserSlash className="text-gray-400 text-xl" />}
               </div>
               <div className="overflow-hidden">
-                <p className="text-white font-semibold text-sm truncate">{isLoggedIn ? (user?.email?.split('@')[0] ?? 'User') : 'Guest'}</p>
+                <p className="text-white font-semibold text-sm truncate">{isLoggedIn ? (user?.firstName + " " + user?.lastName ?? 'User') : 'Guest'}</p>
                 <p className="text-gray-400 text-xs truncate">{isLoggedIn ? (user?.email ?? '') : 'Not logged in'}</p>
               </div>
             </div>

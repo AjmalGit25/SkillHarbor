@@ -45,9 +45,12 @@ export default function AdminLogin() {
 
         {/* Header */}
         <header className='flex items-center justify-between mt-5' >
-          <Link to={"/"} className='flex items-center gap-2'>
-            <img src="/logo.png" alt="Logo" className='h-8 sm:h-10 w-auto rounded-full bg-red-300' />    {/* logo */}
-            <h1 className='font-medium text-md sm:text-2xl text-orange-500'>SkillHarbor</h1>
+          <Link to="/admin/dashboard" className="flex items-center gap-2">
+            <img src="/logo.png" alt="Logo" className="h-9 w-auto rounded-full" />
+            <h3 className="text-xl font-semibold">
+              <span className="bg-linear-to-l from-sky-500 to-blue-800 bg-clip-text text-transparent">Skill</span>
+              <span className="text-white">Harbor</span>
+            </h3>
           </Link>
 
           {/* Buttons */}
