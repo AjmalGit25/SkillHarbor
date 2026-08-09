@@ -7,10 +7,12 @@ import Navbar from '../../components/Navbar.jsx';
 import { BACKEND_URL } from '../../utils/utils.js';
 
 export default function Dashboard() {
-  const [purchase, setPurchase]       = useState([]);
-  const [isLoggedIn, setIsLoggedIn]   = useState(false);
-  const [user, setUser]               = useState(null);
-  const [loading, setLoading]         = useState(true);
+  const [purchase, setPurchase] = useState([]);
+  const [progressMap, setProgressMap] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('all'); // 'all' | 'inprogress' | 'completed'
 
   const navigate = useNavigate();
 
@@ -43,7 +45,23 @@ export default function Dashboard() {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
-        setPurchase(res.data.courseData);
+        const courses = res.data.courseData || [];
+        setPurchase(courses);
+
+        // fetch progress for each purchased course
+        const map = {};
+        await Promise.all(courses.map(async (c) => {
+          try {
+            const { data } = await axios.get(`${BACKEND_URL}/content/progress/${c._id}`, {
+              headers: { Authorization: `Bearer ${token}` },
+              withCredentials: true,
+            });
+            map[c._id] = data.progress || null;
+          } catch (err) {
+            map[c._id] = null;
+          }
+        }));
+        setProgressMap(map);
       } catch (err) {
         console.log(err);
       } finally {
@@ -75,16 +93,29 @@ export default function Dashboard() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-10">
-          {[
-            { label: 'Courses Purchased', value: purchase.length },
-            { label: 'In Progress',       value: purchase.length },
-            { label: 'Completed',         value: 0 },
-          ].map(({ label, value }) => (
-            <div key={label} className="bg-white/5 border border-white/10 rounded-xl py-5 text-center">
-              <p className="text-3xl font-bold text-sky-400">{value}</p>
-              <p className="text-gray-400 text-sm mt-1">{label}</p>
-            </div>
-          ))}
+          {(() => {
+            const purchasedCount = purchase.length;
+            const completedCount = Object.values(progressMap).filter(p => p && p.completionPercentage === 100).length;
+            const inProgressCount = Object.values(progressMap).filter(p => p && p.completionPercentage > 0 && p.completionPercentage < 100).length;
+            const stats = [
+              { key: 'all', label: 'Courses Purchased', value: purchasedCount },
+              { key: 'inprogress', label: 'In Progress', value: inProgressCount },
+              { key: 'completed', label: 'Completed', value: completedCount },
+            ];
+            return stats.map(({ key, label, value }) => (
+              <div
+                key={key}
+                role="button"
+                tabIndex={0}
+                onClick={() => setFilter(key)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setFilter(key); }}
+                className={`bg-white/5 border rounded-xl py-5 text-center cursor-pointer transition-all duration-150 ${filter === key ? 'border-sky-400/70 bg-white/10' : 'border-white/10'}`}
+              >
+                <p className="text-3xl font-bold text-sky-400">{value}</p>
+                <p className="text-gray-400 text-sm mt-1">{label}</p>
+              </div>
+            ));
+          })()}
         </div>
 
         {/* My Courses */}
@@ -108,23 +139,31 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {purchase.map((course, i) => (
-              <div key={i} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-sky-500/50 hover:bg-white/10 transition-all duration-300 flex flex-col">
-                <img
-                  src={course.image?.url || '/logo.png'}
-                  alt={course.title}
-                  className="w-full h-44 object-cover"
-                />
-                <div className="p-5 flex flex-col flex-1">
-                  <h3 className="text-white font-bold text-lg mb-1 line-clamp-1">{course.title}</h3>
-                  <p className="text-gray-400 text-sm line-clamp-2 mb-4 flex-1">{course.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-green-400 font-semibold text-sm">✓ Purchased</span>
-                    <span className="text-sky-400 font-bold">₹{course.price}</span>
+            {purchase
+              .filter((course) => {
+                if (filter === 'all') return true;
+                const p = progressMap[course._id];
+                if (filter === 'completed') return p && p.completionPercentage === 100;
+                if (filter === 'inprogress') return p && p.completionPercentage > 0 && p.completionPercentage < 100;
+                return true;
+              })
+              .map((course) => (
+                <div key={course._id} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-sky-500/50 hover:bg-white/10 transition-all duration-300 flex flex-col">
+                  <img
+                    src={course.image?.url || '/logo.png'}
+                    alt={course.title}
+                    className="w-full h-44 object-cover"
+                  />
+                  <div className="p-5 flex flex-col flex-1">
+                    <h3 className="text-white font-bold text-lg mb-1 line-clamp-1">{course.title}</h3>
+                    <p className="text-gray-400 text-sm line-clamp-2 mb-4 flex-1">{course.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-green-400 font-semibold text-sm">✓ Purchased</span>
+                      <span className="text-sky-400 font-bold">₹{course.price}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         )}
       </main>
