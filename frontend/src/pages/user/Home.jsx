@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Counter from '../../components/Counter.jsx';
 import Navbar from '../../components/Navbar.jsx';
+import Footer from '../../components/Footer.jsx';
 
 import { BACKEND_URL } from "../../utils/utils.js";
 
@@ -42,12 +43,12 @@ const Home = () => {
     <div className="bg-linear-to-r from-black to-blue-950 min-h-screen text-white">
 
       <Navbar />
-      <main className="container mx-auto px-4 py-10">
+      <main className="px-4 py-10">
 
         {/* Hero Section */}
-        <section className='text-center mt-14 mb-10'>
-          <span className='inline-block bg-sky-500/10 border border-sky-500/30 text-sky-400 text-xs font-semibold px-4 py-1 rounded-full mb-5 tracking-widest uppercase'>🎓 Learn. Build. Grow.</span>
-          <h1 className='text-3xl sm:text-5xl md:text-7xl font-extrabold leading-tight'>
+        <section className='text-center mb-10'>
+          <span className='inline-block bg-sky-500/10 border border-sky-500/30 text-sky-400 text-xs font-semibold text-[8px] sm:text-sm px-4 py-1 rounded-full mb-5 tracking-widest uppercase'>🎓 Learn • Build • Grow.</span>
+          <h1 className='text-4xl md:text-7xl font-extrabold leading-tight'>
             <span className='bg-linear-to-l from-sky-500 to-blue-800 bg-clip-text text-transparent'>Skill</span>
             <span className='text-white'>Harbor</span>
           </h1>
@@ -124,68 +125,14 @@ const Home = () => {
               <div key={i} className='bg-gray-900 rounded-lg overflow-hidden flex flex-col items-center gap-2 w-64 p-3 mx-3 hover:scale-105 duration-300 shrink-0'>
                 <img src={course.image.url} alt={course.title} className='h-30 w-auto object-contain' />
                 <h2 className='font-bold text-lg text-center'>{course.title}</h2>
-                <button className='rounded-full bg-orange-500 p-1 px-4 cursor-pointer text-white hover:bg-white duration-300 hover:text-orange-500'>Enroll Now</button>
+                <Link to={`/courses/${course._id}`} className='rounded-full bg-orange-500 p-1 px-4 cursor-pointer text-white hover:bg-white duration-300 hover:text-orange-500'>Enroll Now</Link>
               </div>
             ))}
           </div>
         </section>
 
-        <hr className='my-8' />
-
         {/* Footer ======================================================== */}
-        <footer>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-6 card'>
-
-            {/* Left Footer - Logo and Social Media */}
-            <div className='flex flex-col items-center md:items-start space-y-3'>
-
-              <div className='flex items-center gap-2'>
-                <img src="/logo.png" alt="Logo" className='h-10 w-auto rounded-full' />    {/* logo */}
-                <h1 className='font-medium text-md sm:text-2xl '>
-                  <span className='bg-linear-to-l from-sky-500 to-blue-800 bg-clip-text text-transparent'>Skill</span>
-                  <span className='text-white'>Harbor</span>
-                </h1>
-              </div>
-
-              {/* Social Media Links */}
-              <div className='space-y-1'>
-                <p className=''>Follow Us</p>
-                <div className='flex space-x-4'>
-                  <a href=""><FaFacebook /></a>
-                  <a href=""><FaInstagram /></a>
-                  <a href=""><FaXTwitter /></a>
-                </div>
-              </div>
-
-              {/* Copyright */}
-              <div>
-                <h3 className='font-thin'>
-                  Md Ajmal Hussain &copy; 2026
-                </h3>
-              </div>
-            </div>
-
-            {/* Middle Footer -  */}
-            <div className='flex flex-col items-center'>
-              <h3 className='font-bold text-xl mb-2'>Quick Links</h3>
-              <ul className='list-none space-y-2 text-gray-400'>
-                <li className='hover:text-sky-500 duration-300'><a href="">Youtube - SkillHarbor</a></li>
-                <li className='hover:text-sky-500 duration-300'><a href="">Linkedin - SkillHarbor</a></li>
-                <li className='hover:text-sky-500 duration-300'><a href="https://github.com/AjmalGit25/SkillHarbor">Github - SkillHarbor</a></li>
-              </ul>
-            </div>
-
-            {/* Right Footer - Help and Support */}
-            <div className='flex flex-col items-center'>
-              <h3 className='font-bold text-xl mb-2'>Help & Support</h3>
-              <ul className='list-none space-y-2 text-gray-400'>
-                <li className='hover:text-sky-500 duration-300'><a href="">Terms & Conditions</a></li>
-                <li className='hover:text-sky-500 duration-300'><a href="">Privacy & Policy</a></li>
-                <li className='hover:text-sky-500 duration-300'><a href="">Refunds & Cancellation</a></li>
-              </ul>
-            </div>
-          </div>
-        </footer>
+        <Footer/>
       </main>
     </div>
   )

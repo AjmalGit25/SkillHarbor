@@ -76,7 +76,7 @@ export default function Dashboard() {
       <Navbar />
 
       {/* ── MAIN CONTENT ───────────────────────────────────────────── */}
-      <main className="container mx-auto px-4 py-10">
+      <main className="px-4 py-10">
 
         {/* Welcome Banner */}
         <div className="bg-linear-to-r from-sky-500/20 to-blue-800/20 border border-sky-500/20 rounded-2xl px-8 py-8 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -138,7 +138,7 @@ export default function Dashboard() {
             <Link to="/courses" className="bg-sky-500 hover:bg-sky-400 text-white px-6 py-2.5 rounded-full font-semibold transition-colors duration-200">Explore Courses</Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {purchase
               .filter((course) => {
                 if (filter === 'all') return true;
@@ -148,13 +148,13 @@ export default function Dashboard() {
                 return true;
               })
               .map((course) => (
-                <div key={course._id} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-sky-500/50 hover:bg-white/10 transition-all duration-300 flex flex-col">
+                <Link to={`/learn/${course._id}`} key={course._id} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-sky-500/50 hover:bg-white/10 transition-all duration-300 flex flex-col p-3">
                   <img
-                    src={course.image?.url || '/logo.png'}
+                    src={course.image.url}
                     alt={course.title}
-                    className="w-full h-44 object-cover"
+                    className="w-full h-40 object-contain bg-slate-950 rounded-2xl"
                   />
-                  <div className="p-5 flex flex-col flex-1">
+                  <div className="py-5 flex flex-col flex-1">
                     <h3 className="text-white font-bold text-lg mb-1 line-clamp-1">{course.title}</h3>
                     <p className="text-gray-400 text-sm line-clamp-2 mb-4 flex-1">{course.description}</p>
                     <div className="flex items-center justify-between">
@@ -162,7 +162,7 @@ export default function Dashboard() {
                       <span className="text-sky-400 font-bold">₹{course.price}</span>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
           </div>
         )}

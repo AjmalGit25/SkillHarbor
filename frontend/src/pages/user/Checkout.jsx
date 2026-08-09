@@ -7,7 +7,7 @@ import Navbar from '../../components/Navbar.jsx';
 
 import { BACKEND_URL } from "../../utils/utils.js";
 
-export default function Buy() {
+export default function Checkout() {
   const { courseId } = useParams();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -17,8 +17,8 @@ export default function Buy() {
   const [error, setError] = useState("");
 
 
-  const user = JSON.parse(localStorage.getItem("user"));
-  const token = user.token;
+  const userData = JSON.parse(localStorage.getItem("user"));
+  const token = userData.token;
 
   const stripe = useStripe();
   const elements = useElements();
@@ -65,73 +65,84 @@ export default function Buy() {
     }
 
     setLoading(true);
+    setCardError("");
+
     const card = elements.getElement(CardElement);
 
-    if (card == null) {
-      console.log("Cardelement not found");
+    if (!card) {
+      console.log("CardElement not found");
       setLoading(false);
       return;
     }
 
-    // Use your card Element with other Stripe.js APIs
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card,
-    });
-
-    if (error) {
-      console.log("Stripe PaymentMethod Error: ", error);
-      setLoading(false);
-      setCardError(error.message);
-    } else {
-      console.log("[PaymentMethod Created]", paymentMethod);
-    }
     if (!clientSecret) {
       console.log("No client secret found");
       setLoading(false);
       return;
     }
+
+    console.log("[Stripe] Confirming payment...");
+
     const { paymentIntent, error: confirmError } =
       await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
-          card: card,
+          card,
           billing_details: {
-            name: user?.user?.firstName,
-            email: user?.user?.email,
+            name: userData?.user?.firstName || userData?.firstName || '',
+            email: userData?.user?.email || userData?.email || '',
           },
         },
       });
+
     if (confirmError) {
+      console.log("Stripe Payment Error:", confirmError);
+
       setCardError(confirmError.message);
-    } else if (paymentIntent.status === "succeeded") {
-      console.log("Payment succeeded: ", paymentIntent);
-      setCardError("Your payment id: ", paymentIntent.id);
-      const paymentInfo = {
-        email: user?.user?.email,
-        userId: user.user._id,
-        courseId: courseId,
-        paymentId: paymentIntent.id,
-        amount: paymentIntent.amount,
-        status: paymentIntent.status,
-      };
-      console.log("Payment info: ", paymentInfo);
-      await axios
-        .post(`${BACKEND_URL}/order`, paymentInfo, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        })
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-          toast.error("Error in making payment");
-        });
-      toast.success("Payment Successful");
-      navigate("/purchases");
+      setLoading(false);
+      return;
     }
+
+    console.log("[Stripe] Payment Intent:", paymentIntent);
+
+    if (paymentIntent.status === "succeeded") {
+      console.log(
+        "[Stripe] Payment succeeded:",
+        paymentIntent.id
+      );
+
+      toast.success("Payment Successful");
+
+      // Persist order on backend so purchases list is updated immediately
+      try {
+        const payload = {
+          userId: userData?.user?._id || userData?.user?.id || userData?._id || null,
+          courseId: courseId,
+          stripeSessionId: paymentIntent.latest_charge || null,
+          stripePaymentIntentId: paymentIntent.id,
+          amount: paymentIntent.amount_received ? paymentIntent.amount_received / 100 : course.price,
+          currency: paymentIntent.currency || 'usd',
+          status: 'completed',
+          createdAt: paymentIntent.created ? new Date(paymentIntent.created * 1000) : new Date(),
+        };
+
+        await axios.post(`${BACKEND_URL}/payment`, payload, {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        });
+      } catch (err) {
+        console.error('Failed to persist order on backend:', err);
+      }
+
+      navigate("/purchases");
+    } else {
+      console.log(
+        "[Stripe] Payment status:",
+        paymentIntent.status
+      );
+
+      toast.error("Payment was not completed");
+    }
+
     setLoading(false);
   };
 

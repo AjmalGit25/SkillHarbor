@@ -214,7 +214,7 @@ export default function CourseDetails() {
                 </button>
               ) : (
                 <button
-                  onClick={() => navigate(`/buy/${courseId}`)}
+                  onClick={() => navigate(`/checkout/${courseId}`)}
                   className="w-full bg-sky-500 hover:bg-sky-400 text-white font-bold py-3 rounded-full transition-colors duration-200"
                 >
                   Buy Course
