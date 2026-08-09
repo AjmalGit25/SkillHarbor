@@ -48,8 +48,8 @@ const router = createBrowserRouter([
   { path: "/buy/:courseId", element: <Buy /> },
   { path: "/coord", element: <Coordinates /> },
   { path: "/learn/:courseId", element: <ProtectedUser><Learn /></ProtectedUser> },
-  { path: "/purchases", element: <ProtectedUser><Purchases /></ProtectedUser> },
-  { path: "/dashboard", element: <ProtectedUser><Dashboard /></ProtectedUser> },
+  { path: "/purchases", element: <Purchases /> },
+  { path: "/dashboard", element: <Dashboard /> },
 
   // Admin routes
   { path: "/admin/signup", element: <AdminSignup /> },
