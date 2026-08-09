@@ -48,7 +48,10 @@ export default function Login() {
 
         {/* Login Form */}
         <div className='bg-gray-900 p-8 rounded-lg w-75 sm:w-120 shadow-lg mt-20 mx-auto'>
-          <h2 className='text-2xl font-bold mb-4 text-center'>Welcome to <span className='text-orange-500'>SkillHarbor</span></h2>
+          <h2 className='text-2xl font-bold mb-4 text-center'>Welcome to
+            <span className='bg-linear-to-l from-sky-500 to-blue-800 bg-clip-text text-transparent'>Skill</span>
+            <span className='text-white'>Harbor</span>
+          </h2>
           <p className='text-center text-gray-400 mb-6'>Log in to access paid content!</p>
 
           <form onSubmit={handleSubmit}>
@@ -90,10 +93,13 @@ export default function Login() {
             {/* Button */}
             <div className='mt-4'>
               <button
-                className='bg-orange-500 text-white rounded font-semibold hover:bg-blue-600 px-5 py-2 sm:py-3 w-full transition-colors duration-200 cursor-pointer'
+                className='bg-sky-500 text-white rounded font-semibold hover:bg-sky-400 px-5 py-2 sm:py-3 w-full transition-colors duration-200 cursor-pointer'
               >
                 Login
               </button>
+              <div className='text-center mt-3'>
+                <p className='text-gray-400 text-sm'>Don't have an account? <Link to="/signup" className='text-sky-400 font-semibold hover:underline'>Sign up</Link></p>
+              </div>
             </div>
 
           </form>
