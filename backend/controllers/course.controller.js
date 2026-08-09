@@ -1,6 +1,7 @@
 import { Course } from '../models/course.model.js';
 import { Purchase } from '../models/purchase.model.js';
 import { v2 as cloudinary } from 'cloudinary';
+import stripe from "../config/stripe.js";
 
 export const createCourse = async (req, res) => {
   const adminId = req.adminId;
@@ -193,7 +194,6 @@ export const getCourseDetails = async (req, res) => {
   }
 }
 
-
 export const enrollFree = async (req, res) => {
   const { userId } = req;
   const { courseId } = req.params;
@@ -213,10 +213,6 @@ export const enrollFree = async (req, res) => {
   }
 };
 
-import Stripe from 'stripe';
-import config from '../config.js';
-const stripe = new Stripe(config.STRIPE_SECRET_KEY);
-
 export const buyCourse = async (req, res) => {
   const { userId } = req;
   const { courseId } = req.params;
@@ -224,44 +220,34 @@ export const buyCourse = async (req, res) => {
   try {
     const course = await Course.findById(courseId);
     if (!course) {
-      return res.status(404).json({
-        success: false,
-        message: "Course not found",
-      });
+      return res.status(404).json({ success: false, message: "Course not found", });
     }
 
     const isPurchased = await Purchase.findOne({ userId, courseId });
     if (isPurchased) {
-      return res.status(400).json({
-        success: true,
-        message: "Course already purchased",
-      });
+      return res.status(400).json({ success: false, message: "Course already purchased", });
     }
 
     // Stripe payment code ...
-    const amount = course.price;
+    const amount = Math.round(course.price * 100);  // Stripe expects the amount in the smallest currency unit.
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount,
       currency: "usd",
-      payment_method_types: ["card"]
+      payment_method_types: ["card"],
+      metadata: {
+        userId: userId.toString(),
+        courseId: courseId.toString(),
+      },
     });
-
-    const purchase = new Purchase({ userId, courseId });
-    await purchase.save();
 
     return res.status(201).json({
       success: true,
-      message: "Course purchased successfully",
-      course,
-      purchase,
+      message: 'Payment initiated',
       clientSecret: paymentIntent.client_secret,
+      course: course,
     });
-
   } catch (error) {
     console.error("ERROR OCCURRED:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to buy course",
-    });
+    return res.status(500).json({ success: false, message: "Failed to initiate payment", });
   }
 }

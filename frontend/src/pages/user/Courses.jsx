@@ -6,6 +6,7 @@ import { FiSearch } from 'react-icons/fi';
 import { FaFacebook, FaInstagram } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import Navbar from '../../components/Navbar.jsx';
+import Footer from '../../components/Footer.jsx';
 
 import { BACKEND_URL } from '../../utils/utils.js';
 
@@ -161,50 +162,8 @@ export default function Courses() {
           )}
         </section>
 
-        <hr className="my-8 border-white/10" />
-
         {/* Footer */}
-        <footer>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 card">
-
-            <div className="flex flex-col items-center md:items-start space-y-3">
-              <div className="flex items-center gap-2">
-                <img src="/logo.png" alt="Logo" className="h-10 w-auto rounded-full" />
-                <h1 className="font-medium text-2xl">
-                  <span className="bg-linear-to-l from-sky-500 to-blue-800 bg-clip-text text-transparent">Skill</span>
-                  <span className="text-white">Harbor</span>
-                </h1>
-              </div>
-              <div className="space-y-1">
-                <p>Follow Us</p>
-                <div className="flex space-x-4">
-                  <a href=""><FaFacebook /></a>
-                  <a href=""><FaInstagram /></a>
-                  <a href=""><FaXTwitter /></a>
-                </div>
-              </div>
-              <h3 className="font-thin">Md Ajmal Hussain &copy; 2026</h3>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <h3 className="font-bold text-xl mb-2">Quick Links</h3>
-              <ul className="list-none space-y-2 text-gray-400">
-                <li className="hover:text-sky-500 duration-300"><a href="">Youtube - SkillHarbor</a></li>
-                <li className="hover:text-sky-500 duration-300"><a href="">Linkedin - SkillHarbor</a></li>
-                <li className="hover:text-sky-500 duration-300"><a href="https://github.com/AjmalGit25/SkillHarbor">Github - SkillHarbor</a></li>
-              </ul>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <h3 className="font-bold text-xl mb-2">Help & Support</h3>
-              <ul className="list-none space-y-2 text-gray-400">
-                <li className="hover:text-sky-500 duration-300"><a href="">Terms & Conditions</a></li>
-                <li className="hover:text-sky-500 duration-300"><a href="">Privacy & Policy</a></li>
-                <li className="hover:text-sky-500 duration-300"><a href="">Refunds & Cancellation</a></li>
-              </ul>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </main>
     </div>
   );

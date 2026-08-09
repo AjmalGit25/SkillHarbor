@@ -13,7 +13,7 @@ import Login from './pages/user/Login.jsx';
 import Signup from "./pages/user/Signup.jsx"
 import Courses from './pages/user/Courses.jsx';
 import Purchases from './pages/user/Purchases.jsx';
-import Buy from './pages/user/Buy.jsx';
+import Checkout from './pages/user/Checkout.jsx';
 import Dashboard from './pages/user/Dashboard.jsx';
 import CourseDetails from './pages/user/CourseDetails.jsx';
 import Learn from './pages/user/Learn.jsx';
@@ -26,9 +26,10 @@ import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 import CourseCreate from './pages/admin/CourseCreate.jsx';
 import OurCourses from './pages/admin/OurCourses.jsx';
 import UpdateCourse from './pages/admin/UpdateCourse.jsx';
+import PageNotFound from './pages/PageNotFound.jsx';
 
 
-const ProtectedUser  = ({ children }) => localStorage.getItem('user')  ? children : <Navigate to="/login" />;
+const ProtectedUser = ({ children }) => localStorage.getItem('user') ? children : <Navigate to="/login" />;
 const ProtectedAdmin = ({ children }) => localStorage.getItem('admin') ? children : <Navigate to="/admin/login" />;
 
 const router = createBrowserRouter([
@@ -41,23 +42,24 @@ const router = createBrowserRouter([
       { path: "/signup", element: <Signup /> },
       { path: "/courses", element: <Courses /> },
       { path: "/courses/:courseId", element: <CourseDetails /> },
-    ]
+      
+      // User routes
+      { path: "/checkout/:courseId", element: <ProtectedUser><Checkout /></ProtectedUser> },
+      { path: "/coord", element: <Coordinates /> },
+      { path: "/learn/:courseId", element: <ProtectedUser><Learn /></ProtectedUser> },
+      { path: "/purchases", element: <Purchases /> },
+      { path: "/dashboard", element: <Dashboard /> },
+
+      // Admin routes
+      { path: "/admin/signup", element: <AdminSignup /> },
+      { path: "/admin/login", element: <AdminLogin /> },
+      { path: "/admin/dashboard", element: <ProtectedAdmin><AdminDashboard /></ProtectedAdmin> },
+      { path: "/admin/create-course", element: <ProtectedAdmin><CourseCreate /></ProtectedAdmin> },
+      { path: "/admin/our-courses", element: <ProtectedAdmin><OurCourses /></ProtectedAdmin> },
+      { path: "/admin/update-course/:courseId", element: <ProtectedAdmin><UpdateCourse /></ProtectedAdmin> },
+    ],
   },
-
-  // User routes
-  { path: "/buy/:courseId", element: <Buy /> },
-  { path: "/coord", element: <Coordinates /> },
-  { path: "/learn/:courseId", element: <ProtectedUser><Learn /></ProtectedUser> },
-  { path: "/purchases", element: <Purchases /> },
-  { path: "/dashboard", element: <Dashboard /> },
-
-  // Admin routes
-  { path: "/admin/signup", element: <AdminSignup /> },
-  { path: "/admin/login", element: <AdminLogin /> },
-  { path: "/admin/dashboard", element: <ProtectedAdmin><AdminDashboard /></ProtectedAdmin> },
-  { path: "/admin/create-course", element: <ProtectedAdmin><CourseCreate /></ProtectedAdmin> },
-  { path: "/admin/our-courses", element: <ProtectedAdmin><OurCourses /></ProtectedAdmin> },
-  { path: "/admin/update-course/:courseId", element: <ProtectedAdmin><UpdateCourse /></ProtectedAdmin> },
+  {path: "*", element: <PageNotFound />}
 ]);
 
 createRoot(document.getElementById('root')).render(

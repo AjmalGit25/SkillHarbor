@@ -9,7 +9,7 @@ dotenv.config();
 import courseRouter from './routes/course.route.js';
 import userRouter from './routes/user.route.js';
 import adminRouter from './routes/admin.route.js';
-import orderRouter from './routes/order.route.js';
+import paymentRouter from './routes/payment.route.js';
 import moduleRouter from './routes/module.route.js';
 
 import cookieParser from 'cookie-parser';
@@ -50,9 +50,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-
-console.log("Stripe Key:", process.env.STRIPE_SECRET_KEY);
-
+// MongoDB Database Connection
 try {
   console.log('Connecting to MongoDB...', DB_URI ? 'URI exists' : 'URI MISSING');
   await mongoose.connect(DB_URI);
@@ -65,7 +63,7 @@ try {
 app.use("/api/v1/course", courseRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/admin", adminRouter);
-app.use("/api/v1/order", orderRouter);
+app.use("/api/v1/payment", paymentRouter);
 app.use("/api/v1/content", moduleRouter);
 
 app.get("/", (req, res)=> {
