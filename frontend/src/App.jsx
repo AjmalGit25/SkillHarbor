@@ -1,9 +1,13 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import './App.css';
 
 const App = () => {
+  const location = useLocation();
+
   return (
-    <Outlet/>
+    <>
+      <Outlet />
+    </>
   );
 }
 
