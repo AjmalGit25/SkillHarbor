@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import Navbar from '../../components/Navbar.jsx';
+import Footer from '../../components/Footer.jsx';
 
 import { BACKEND_URL } from '../../utils/utils.js';
 
@@ -76,7 +77,7 @@ export default function Dashboard() {
       <Navbar />
 
       {/* ── MAIN CONTENT ───────────────────────────────────────────── */}
-      <main className="px-4 py-10">
+      <main className="px-4 py-5 sm:py-10">
 
         {/* Welcome Banner */}
         <div className="bg-linear-to-r from-sky-500/20 to-blue-800/20 border border-sky-500/20 rounded-2xl px-8 py-8 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -132,7 +133,7 @@ export default function Dashboard() {
             <Link to="/login" className="bg-sky-500 hover:bg-sky-400 text-white px-6 py-2.5 rounded-full font-semibold transition-colors duration-200">Login</Link>
           </div>
         ) : purchase.length === 0 ? (
-          <div className="text-center py-16 bg-white/5 border border-white/10 rounded-2xl">
+          <div className="text-center bg-white/5 border border-white/10 rounded-2xl">
             <p className="text-5xl mb-4">📭</p>
             <p className="text-gray-400 mb-4">You haven't purchased any courses yet.</p>
             <Link to="/courses" className="bg-sky-500 hover:bg-sky-400 text-white px-6 py-2.5 rounded-full font-semibold transition-colors duration-200">Explore Courses</Link>
@@ -167,6 +168,9 @@ export default function Dashboard() {
           </div>
         )}
       </main>
+
+      {/* Footer */}
+      <Footer/>
     </div>
   );
 }
