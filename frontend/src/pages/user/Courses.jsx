@@ -107,7 +107,7 @@ export default function Courses() {
         </section>
 
         {/* Courses Grid */}
-        <section className="my-10">
+        <section className="container mx-auto">
           {loading ? (
             <div className="flex justify-center items-center h-48">
               <div className="w-10 h-10 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
@@ -118,13 +118,14 @@ export default function Courses() {
               <p className="text-gray-400 text-lg">No courses found{search ? ` for "${search}"` : ''}.</p>
             </div>
           ) : (
-            <>
+            <div>
               <p className="text-gray-400 text-sm mb-6">{filtered.length} course{filtered.length !== 1 ? 's' : ''} found</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              {/* Course Grid - Large Screen */}
+              <div className="hidden sm:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
                 {/* Course Card */}
                 {filtered.map((course) => (
-                  <Link to={`/courses/${course._id}`} key={course._id} className="card bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-sky-500/50 hover:bg-white/10 transition-all duration-300 flex flex-col">
+                  <Link to={`/courses/${course._id}`} key={course._id} className="card bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-sky-500/50 hover:bg-white/10 hover:scale-103 hover:shadow-[0_0_15px_rgba(122,122,222,.5)] transition-all duration-300 flex flex-col">
                     <div className="relative p-3">
                       <img
                         src={course.image.url}
@@ -158,13 +159,45 @@ export default function Courses() {
                   </Link>
                 ))}
               </div>
-            </>
+
+              {/* Course Column - Small Screen */}
+              <div className="flex flex-col gap-5">
+                {filtered.map((course) => (
+                  <Link to={`/courses/${course._id}`} key={course._id} className='flex items-center gap-3 p-2 border border-white/10 rounded-lg bg-gray-900 hover:shadow-[0_0_15px_rgba(70,170,230,.5)] hover:scale-102 hover:border-sky-500/50 transition-all duration-200 relative group card'>
+                    {/* Image */}
+                    <div className='flex-1'>
+                      <img src={course.image.url} alt={course.title}
+                        className='h-full w-60 object-contain'
+                      />
+                    </div>
+
+                    {/* Details */}
+                    <div className='flex-4 space-y-1 pr-2'>
+                      <div className='flex flex-col gap-2'>
+                        <p className='font-medium text-sm'>{course.title}</p>
+                        <p className='text-[12px] line-clamp-2 text-white/80'>{course.description}</p>
+                      </div>
+
+                      <div className="flex items-center justify-between gap-3 text-sm font-thin">
+                        <span className='text-amber-500'>📦 {courseStats[course._id]?.modules ?? '—'} Modules</span>
+                        <span className='text-violet-400'>🎬 {courseStats[course._id]?.lessons ?? '—'} Lessons</span>
+                      </div>
+                    </div>
+
+                    {/* Enroll */}
+                    <span className='hidden group-hover:block absolute top-2 right-2 text-[11px] border border-gray-500 bg-blue-600 rounded-md px-2 py-.5'>
+                      Enroll Now
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
           )}
         </section>
-
-        {/* Footer */}
-        <Footer />
       </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
