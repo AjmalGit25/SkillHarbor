@@ -4,8 +4,7 @@ import { FaXTwitter } from "react-icons/fa6";
 
 const Footer = () => {
   return (
-    <footer className="mt-5">
-      <div className="bg-linear-to-l from-sky-500 to-blue-800 opacity-50 h-px rounded-2xl mb-5"></div>
+    <footer className="mt-5 bg-gray-900 py-5 border-t border-white/10">
 
       <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
         <div className='flex flex-col items-center md:items-start'>
@@ -42,6 +41,7 @@ const Footer = () => {
           </ul>
         </div>
       </div>
+      <div className="mt-6 text-center text-[12px] tracking-wider text-gray-400">Made with love 💖 Md Ajmal Hussain</div>
     </footer>
   )
 }
