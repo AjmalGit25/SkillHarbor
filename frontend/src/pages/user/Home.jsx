@@ -130,10 +130,10 @@ const Home = () => {
             ))}
           </div>
         </section>
-
-        {/* Footer ======================================================== */}
-        <Footer/>
       </main>
+
+      {/* Footer is rendered globally */}
+      <Footer />
     </div>
   )
 }
