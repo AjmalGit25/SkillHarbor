@@ -160,8 +160,8 @@ export default function Courses() {
                 ))}
               </div>
 
-              {/* Course Column - Small Screen */}
-              <div className="flex flex-col gap-5">
+              {/* Course Lists - Small Screen */}
+              <div className="sm:hidden flex flex-col gap-5">
                 {filtered.map((course) => (
                   <Link to={`/courses/${course._id}`} key={course._id} className='flex items-center gap-3 p-2 border border-white/10 rounded-lg bg-gray-900 hover:shadow-[0_0_15px_rgba(70,170,230,.5)] hover:scale-102 hover:border-sky-500/50 transition-all duration-200 relative group card'>
                     {/* Image */}
